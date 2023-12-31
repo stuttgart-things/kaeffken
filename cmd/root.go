@@ -7,7 +7,17 @@ import (
 	"fmt"
 	"os"
 
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
+
 	"github.com/spf13/cobra"
+)
+
+var (
+	gitRepository string
+	logFilePath   string
+	gitBranch     string
+	gitCommitID   string
+	log           = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -50,13 +60,10 @@ func Execute(defCmd string) {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.kaeffken.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
+	rootCmd.PersistentFlags().StringVar(&gitRepository, "git", "https://github.com/stuttgart-things/kaeffken.git", "source git repository")
+	rootCmd.PersistentFlags().StringVar(&logFilePath, "log", "/tmp/kaeffken.log", "log file path")
+	// rootCmd.PersistentFlags().StringVar(&gitUser, "gitUser", "git/data/github:username", "git user")
+	rootCmd.PersistentFlags().StringVar(&gitBranch, "branch", "main", "git branch")
+	rootCmd.PersistentFlags().StringVar(&gitCommitID, "commitID", "", "git commit id")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

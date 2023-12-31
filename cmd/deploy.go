@@ -20,7 +20,7 @@ var deployCmd = &cobra.Command{
 		// repo, _ := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 		// profileFile = sthingsCli.ReadFileContentFromGitRepo(repo, profile)
 		fmt.Println("deploy called")
-
+		fmt.Println(logFilePath, gitRepository)
 	},
 }
 
