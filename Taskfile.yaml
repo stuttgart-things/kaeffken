@@ -1,0 +1,22 @@
+---
+version: "3"
+vars:
+  PROJECT_NAME:
+    sh: pwd | grep -o "[^/]*$"
+  DATE:
+    sh: date +"%y.%m%d.%H%M"
+
+tasks:
+
+  lint:
+    desc: Lint code
+    cmds:
+      - go mod tidy
+      - cmd: golangci-lint run
+        ignore_error: true
+
+  test:
+    desc: Test code
+    cmds:
+      - go mod tidy
+      - cmd: go test ./... -v

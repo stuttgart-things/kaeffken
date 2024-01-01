@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
+	github.com/stuttgart-things/sthingsBase v0.1.23
 	github.com/stuttgart-things/sthingsCli v0.1.80
 )
 
@@ -90,7 +91,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.16.0 // indirect
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7 // indirect
-	github.com/stuttgart-things/sthingsBase v0.1.23 // indirect
 	github.com/subosito/gotenv v1.4.2 // indirect
 	github.com/trivago/tgo v1.0.7 // indirect
 	github.com/tsuyoshiwada/go-gitcmd v0.0.0-20180205145712-5f1f5f9475df // indirect
