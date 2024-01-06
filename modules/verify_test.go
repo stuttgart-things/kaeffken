@@ -4,13 +4,14 @@ Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 package modules
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestVerifyValues(t *testing.T) {
+
+	assert := assert.New(t)
 
 	type test struct {
 		mandatoryFlags []string
@@ -27,11 +28,8 @@ func TestVerifyValues(t *testing.T) {
 		{mandatoryFlags: []string{"repository"}, values: values1, want: true},
 	}
 
-	assert := assert.New(t)
-
 	for _, tc := range tests {
 		validValues := VerifyValues(tc.values, tc.mandatoryFlags)
-		fmt.Println(validValues)
 		assert.Equal(validValues, tc.want)
 	}
 

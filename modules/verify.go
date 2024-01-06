@@ -32,7 +32,6 @@ func VerifyValues(values map[string]string, mandatoryFlags []string) (validValue
 				validValues = false
 			} else {
 				log.Warn(strings.ToUpper(key) + " is unset")
-
 			}
 		}
 	}

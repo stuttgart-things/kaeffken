@@ -10,8 +10,6 @@ import (
 	"github.com/stuttgart-things/kaeffken/modules"
 
 	"github.com/spf13/cobra"
-	sthingsBase "github.com/stuttgart-things/sthingsBase"
-	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
 
 var (
@@ -49,38 +47,20 @@ var deployCmd = &cobra.Command{
 		}
 
 		// LOAD CLUSTERFILE - DEFAULT IS <ROOT>/<ENV>/<LAB>/clusters.yaml
-		repository, cloned := sthingsCli.CloneGitRepository(values["repository"], values["branch"], values["commitID"], nil)
-		fmt.Println(repository)
+		repository, cloned := modules.CloneGitRepository(values)
 
 		if !cloned {
 			log.Error("GIT REPOSITORY CAN NOT BE CLONED: ", values["repository"])
 			os.Exit(3)
 		}
-		// LOAD CLUSTERSFILE
-		fileList, directoryList := sthingsCli.GetFileListFromGitRepository("clusters/labul/", repository)
-		fmt.Println(fileList, directoryList)
 
-		if sthingsBase.CheckForStringInSlice(fileList, values["clustersfileName"]) {
-			clusterFile := sthingsCli.ReadFileContentFromGitRepo(repository, "clusters/labul/"+values["clustersfileName"])
-			fmt.Println(clusterFile)
-		} else {
-			log.Error("CLUSTERFILE DOES NOT EXIST IN REPOSITORY: ", gitRepository+":"+"clusters/labul/"+values["clustersfileName"])
-			os.Exit(3)
-		}
+		// LOAD CLUSTERSFILE
+		clustersFile := modules.LoadDataFromRepository(repository, values["clusterFilePath"])
+		fmt.Println(clustersFile)
 
 		// LOAD FLUX INFRA CATALOGUE
-		fileList, directoryList = sthingsCli.GetFileListFromGitRepository("clusters/labul/", repository)
-		fmt.Println(fileList, directoryList)
-
-		if sthingsBase.CheckForStringInSlice(fileList, values["clustersfileName"]) {
-			fmt.Println("LETS GOOO")
-			infraCatalog := sthingsCli.ReadFileContentFromGitRepo(repository, "clusters/config/"+"infraCatalog.json")
-			fmt.Println(infraCatalog)
-		} else {
-			log.Error("CLUSTERFILE DOES NOT EXIST IN REPOSITORY: ", gitRepository+":"+"clusters/config/"+"infraCatalog.json")
-			os.Exit(3)
-		}
-
+		infraCatalogue := modules.LoadDataFromRepository(repository, "clusters/config/infraCatalog.json")
+		fmt.Println(infraCatalogue)
 	},
 }
 
