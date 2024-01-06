@@ -1,6 +1,5 @@
 ---
 version: 1
-
 before:
   hooks:
     - go mod tidy
@@ -11,7 +10,6 @@ builds:
       - CGO_ENABLED=0
     goos:
       - linux
-      - windows
       - darwin
 
 archives:
