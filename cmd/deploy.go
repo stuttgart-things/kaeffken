@@ -6,7 +6,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strings"
+
+	"github.com/stuttgart-things/kaeffken/modules"
 
 	"github.com/spf13/cobra"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
@@ -14,7 +15,8 @@ import (
 )
 
 var (
-	values = make(map[string]string)
+	values         = make(map[string]string)
+	mandatoryFlags = []string{"repository", "branch", "clusterName", "envPath"}
 )
 
 // deployCmd represents the deploy command
@@ -40,12 +42,11 @@ var deployCmd = &cobra.Command{
 		values["clusterPath"] = values["rootPath"] + "/" + values["envPath"] + "/" + values["clusterName"]
 		values["clusterFilePath"] = values["rootPath"] + "/" + values["envPath"] + "/" + values["clustersfileName"]
 
-		// OUTPUT ALL VALUES
-		for key, value := range values {
-			log.Info(strings.ToUpper(key)+": ", value)
+		// VERIFY / OUTPUT ALL VALUES
+		if !modules.VerifyValues(values, mandatoryFlags) {
+			log.Error("KAEFFKEN EXITED")
+			os.Exit(3)
 		}
-
-		// VERIFY NEEDED VALUES
 
 		// LOAD CLUSTERFILE - DEFAULT IS <ROOT>/<ENV>/<LAB>/clusters.yaml
 		repository, cloned := sthingsCli.CloneGitRepository(values["repository"], values["branch"], values["commitID"], nil)

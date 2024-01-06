@@ -3,7 +3,7 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 */
 package main
 
-import "kaeffken/cmd"
+import "github.com/stuttgart-things/kaeffken/cmd"
 
 func main() {
 	defCmd := "deploy"
