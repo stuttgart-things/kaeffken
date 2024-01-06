@@ -7,7 +7,6 @@ vars:
     sh: date +"%y.%m%d.%H%M"
 
 tasks:
-
   lint:
     desc: Lint code
     cmds:
@@ -20,3 +19,13 @@ tasks:
     cmds:
       - go mod tidy
       - cmd: go test ./... -v
+
+  run:
+    desc: Build code
+    deps:
+      - lint
+      - test
+    cmds:
+      - go mod tidy
+      - cmd: go install
+      - cmd: "{{ .PROJECT_NAME }}"

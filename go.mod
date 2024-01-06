@@ -5,7 +5,7 @@ go 1.21.1
 require (
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
-	github.com/stuttgart-things/sthingsBase v0.1.23
+	github.com/stuttgart-things/sthingsBase v0.1.32
 	github.com/stuttgart-things/sthingsCli v0.1.80
 )
 
