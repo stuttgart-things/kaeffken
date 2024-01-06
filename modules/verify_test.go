@@ -1,7 +1,6 @@
 /*
-Copyright © 2024 Patrick Hermann patrick.hermann@sva.de
+Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 */
-
 package modules
 
 import (

@@ -1,5 +1,5 @@
 /*
-Copyright © 2023 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
+Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 */
 package cmd
 
@@ -19,11 +19,11 @@ var (
 	mandatoryFlags = []string{"repository", "branch", "clusterName", "envPath"}
 )
 
-// deployCmd represents the deploy command
+// DEPLOYCMD REPRESENTS THE DEPLOY COMMAND
 var deployCmd = &cobra.Command{
 	Use:   "deploy",
-	Short: "create and deploy gitops apps",
-	Long:  `create and deploy gitops applications.`,
+	Short: "CREATE AND DEPLOY GITOPS APPS",
+	Long:  `CREATE AND DEPLOY GITOPS APPLICATIONS.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// SET DEFAULTS

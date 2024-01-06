@@ -1,5 +1,5 @@
 /*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 */
 package cmd
 
@@ -20,15 +20,12 @@ var (
 	log           = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
 )
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "kaeffken",
-	Short: "kaeffken cli",
-	Long:  `kaeffken cli - gitops cluster management cli`,
+	Short: "KAEFFKEN CLI",
+	Long:  `KAEFFKEN CLI - GITOPS CLUSTER MANAGEMENT CLI`,
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute(defCmd string) {
 	var cmdFound bool
 	cmd := rootCmd.Commands()

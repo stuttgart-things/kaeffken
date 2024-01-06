@@ -1,7 +1,6 @@
 /*
-Copyright © 2024 Patrick Hermann patrick.hermann@sva.de
+Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 */
-
 package modules
 
 import (
@@ -15,15 +14,19 @@ var (
 )
 
 // VERIFY / OUTPUT ALL VALUES
-
 func VerifyValues(values map[string]string, mandatoryFlags []string) (validValues bool) {
 
 	validValues = true
+
+	// RUN OVER ALL VALUES
 	for key, value := range values {
+
+		// OUTPUT IF VALUE IS SET
 		if value != "" {
 			log.Info(strings.ToUpper(key)+": ", value)
 
 		} else {
+			// CHECK IF UNSET VALUE IS MANDATORY OR NOT
 			if sthingsBase.CheckForStringInSlice(mandatoryFlags, key) {
 				log.Error(strings.ToUpper(key) + " is unset")
 				validValues = false
@@ -36,8 +39,3 @@ func VerifyValues(values map[string]string, mandatoryFlags []string) (validValue
 
 	return validValues
 }
-
-// if mandatoryUnset {
-// 	log.Error("KAEFFKEN EXITED")
-// 	os.Exit(3)
-// }
