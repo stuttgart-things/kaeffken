@@ -46,5 +46,5 @@ jobs:
       - name: Test code
         run: |
           go mod tidy
-          CGO_ENABLED=0 go build -buildvcs=false kaeffken
+          CGO_ENABLED=0 go build -buildvcs=false -o ./kaeffken
           ./kaeffken
