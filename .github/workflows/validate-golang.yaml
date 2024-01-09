@@ -5,11 +5,14 @@ on:
   push:
     branches:
       - main
+      - ADD*
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
   validate-golang:
     name: Valdiate Golang
-    uses: stuttgart-things/stuttgart-things/.github/workflows/validate-golang.yaml@main  
+    uses: stuttgart-things/stuttgart-things/.github/workflows/validate-golang.yaml@main
     with:
       module-name: kaeffken
       environment-name: k8s

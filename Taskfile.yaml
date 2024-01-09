@@ -21,11 +21,6 @@ tasks:
         git push origin ${BRANCH_NAME}
       - git branch
       - git branch --set-upstream-to=origin/main ${BRANCH_NAME}
-      - |
-        echo "Enter to be created tag: (${BRANCH_NAME})"
-        read BRANCH_TAG;
-        git tag -a ${BRANCH_TAG} -m 'updated for stuttgart-things {{ .DATE }} for tag version ${BRANCH_TAG}'
-        git push --tags
 
   lint:
     desc: Lint code
@@ -33,7 +28,7 @@ tasks:
       - go mod tidy
       - cmd: golangci-lint run
         ignore_error: true
-        
+
   test:
     desc: Test code
     cmds:
