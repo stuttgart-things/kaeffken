@@ -33,3 +33,18 @@ jobs:
         run: |
           go mod tidy
           go test ./... -v
+
+  Build-Golang:
+    runs-on: arc-runner-scale-set-kaeffken
+    container:
+      image: golang:1.21.5
+    environment: k8s
+    continue-on-error: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+      - name: Test code
+        run: |
+          go mod tidy
+          CGO_ENABLED=0 go build -buildvcs=false kaeffken
+          ./kaeffken
