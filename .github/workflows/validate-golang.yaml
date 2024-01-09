@@ -15,7 +15,7 @@ jobs:
       environment-name: k8s
       runs-on: arc-runner-scale-set-kaeffken
       golint-version: v1.55
-      golang-version:: "1.21.5"
+      golang-version: "1.21.5"
       continue-error: false
       accept-linterrors: true
       accept-failedtests: false
