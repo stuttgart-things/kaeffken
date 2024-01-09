@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  validate-terraform:
+  validate-golang:
     name: Valdiate Golang
     uses: stuttgart-things/stuttgart-things/.github/workflows/validate-golang.yaml@main  
     with:
