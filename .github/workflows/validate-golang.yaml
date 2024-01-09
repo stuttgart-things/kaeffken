@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  Validate-Golang:
+  Lint-Golang:
     runs-on: arc-runner-scale-set-kaeffken
     container:
       image: golangci/golangci-lint:v1.55
