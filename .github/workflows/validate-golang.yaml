@@ -47,4 +47,4 @@ jobs:
         run: |
           go mod tidy
           CGO_ENABLED=0 go build -buildvcs=false -o ./kaeffken
-          ./kaeffken
+          ./kaeffken -h
