@@ -95,5 +95,5 @@ tasks:
       - |
         echo "ENTER TAG"
         read TAG;
-      - git tag -a $( echo ${TAG}) -m 'updated for tag ${TAG}'
+      - git tag -a '${TAG}' -m 'updated for tag ${TAG}'
       - git push origin --tags
