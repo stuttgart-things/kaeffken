@@ -69,4 +69,4 @@ tasks:
     desc: Create pull request into main
     cmds:
       - task: commit
-      - gh pr create -t "pr" -b "${BRANCH} branch into main"
+      - gh pr create -t "pr" -b "{{ .BRANCH }} branch into main"
