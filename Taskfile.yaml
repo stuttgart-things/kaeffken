@@ -83,3 +83,17 @@ tasks:
         read BRANCH_NAME;
         git branch -d ${BRANCH_NAME}
         git push origin -d ${BRANCH_NAME}
+
+  tag:
+    desc: Commit, push & tag the module
+    # deps: [lint, test]
+    cmds:
+      - rm -rf dist
+      - task: commit
+      - go mod tidy
+      - git pull --tags
+      - |
+        echo "ENTER TAG"
+        read TAG;
+      - git tag -a ${TAG} -m 'updated for tag ${TAG}'
+      - git push origin --tags
