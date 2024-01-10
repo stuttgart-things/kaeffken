@@ -1,10 +1,18 @@
 ---
-version: "3"
+version: 3
 vars:
+  REPOSITORY_NAME: stuttgart-things
   PROJECT_NAME:
     sh: pwd | grep -o "[^/]*$"
   DATE:
     sh: date +"%y.%m%d.%H%M"
+  MODULE: github.com/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}
+  GIT_COMMIT:
+    sh: git log -n 1 --format=%h
+  BRANCH:
+    sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD) ; fi
+  VERSION:
+    sh: git describe --tags --abbrev=0
 
 tasks:
 
@@ -21,11 +29,6 @@ tasks:
         git push origin ${BRANCH_NAME}
       - git branch
       - git branch --set-upstream-to=origin/main ${BRANCH_NAME}
-      - |
-        echo "Enter to be created tag: (${BRANCH_NAME})"
-        read BRANCH_TAG;
-        git tag -a ${BRANCH_TAG} -m 'updated for stuttgart-things {{ .DATE }} for tag version ${BRANCH_TAG}'
-        git push --tags
 
   lint:
     desc: Lint code
@@ -33,7 +36,7 @@ tasks:
       - go mod tidy
       - cmd: golangci-lint run
         ignore_error: true
-        
+
   test:
     desc: Test code
     cmds:
@@ -47,5 +50,23 @@ tasks:
       - test
     cmds:
       - go mod tidy
-      - cmd: go install
+      - cmd: go install -ldflags="-X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.version={{ .VERSION }}-{{ .BRANCH }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
       - cmd: "{{ .PROJECT_NAME }}"
+
+  commit:
+    desc: Commit + push code into branch
+    cmds:
+      - git pull
+      - |
+        echo "ENTER COMMIT MESSAGE"
+        read COMMIT_MESSAGE;
+        git add cmd/*
+        git add modules/*
+        git commit -am "$(echo ${COMMIT_MESSAGE})"
+        git push origin -u {{ .BRANCH }}
+
+  pr:
+    desc: Create pull request into main
+    cmds:
+      - task: commit
+      - gh pr create -t "{{ .BRANCH }}" -b "{{ .BRANCH }} branch into main"

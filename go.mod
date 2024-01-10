@@ -3,11 +3,13 @@ module github.com/stuttgart-things/kaeffken
 go 1.21.1
 
 require (
+	github.com/fatih/color v1.14.1
 	github.com/go-git/go-billy/v5 v5.4.1
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
 	github.com/stuttgart-things/sthingsBase v0.1.33
 	github.com/stuttgart-things/sthingsCli v0.1.82
+	go.hein.dev/go-version v0.1.0
 )
 
 require (
@@ -30,7 +32,6 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
-	github.com/fatih/color v1.14.1 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/git-chglog/git-chglog v0.15.4 // indirect
