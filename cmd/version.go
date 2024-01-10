@@ -4,26 +4,44 @@ Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+	goVersion "go.hein.dev/go-version"
 )
 
-// VERSIONCMD REPRESENTS THE VERSION COMMAND
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+var (
+	date       = "unknown"
+	commit     = "unknown"
+	output     = "yaml"
+	version    = "unset"
+	versionCmd = &cobra.Command{
+		Use:   "version",
+		Short: "version will output the current build information",
+		Long: `Print the version information. For example:
+	sthings version`,
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("version called")
-	},
+		Run: func(_ *cobra.Command, _ []string) {
+			PrintBanner()
+		},
+	}
+)
+
+// https://fsymbols.com/generators/carty/
+const banner = `
+█▄▀ ▄▀█ █▀▀ █▀▀ █▀▀ █▄▀ █▀▀ █▄░█
+█░█ █▀█ ██▄ █▀░ █▀░ █░█ ██▄ █░▀█
+
+`
+
+// OUTPUT BANNER + VERSION OUTPUT
+func PrintBanner() string {
+	color.Cyan(banner)
+	resp := goVersion.FuncWithOutput(false, version, commit, date, output)
+	color.Magenta(resp + "\n")
+	return resp
 }
 
 func init() {
+	versionCmd.Flags().StringVarP(&output, "output", "o", "yaml", "Output format. One of 'yaml' or 'json'.")
 	rootCmd.AddCommand(versionCmd)
 }

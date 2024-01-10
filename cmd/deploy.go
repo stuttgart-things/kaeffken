@@ -23,7 +23,6 @@ var deployCmd = &cobra.Command{
 	Short: "CREATE AND DEPLOY GITOPS APPS",
 	Long:  `CREATE AND DEPLOY GITOPS APPLICATIONS.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
 		// SET DEFAULTS
 		values["logFilePath"] = logFilePath
 		values["repository"] = gitRepository

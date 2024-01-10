@@ -5,6 +5,14 @@ vars:
     sh: pwd | grep -o "[^/]*$"
   DATE:
     sh: date +"%y.%m%d.%H%M"
+  REPOSITORY_NAME: stuttgart-things
+  MODULE: github.com/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}
+  GIT_COMMIT:
+    sh: git log -n 1 --format=%h
+  BRANCH:
+    sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD) ; fi
+  VERSION:
+    sh: git describe --tags --abbrev=0
 
 tasks:
 
@@ -42,5 +50,16 @@ tasks:
       - test
     cmds:
       - go mod tidy
-      - cmd: go install
+      - cmd: go install -ldflags="-X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.version={{ .VERSION }}-{{ .BRANCH }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
       - cmd: "{{ .PROJECT_NAME }}"
+
+  commit:
+    cmds:
+      - git pull
+      - |
+        echo "Enter commit message"
+        read COMMIT_MESSAGE;
+        git add cmd/*
+        git add modules/*
+        git commit -am '${COMMIT_MESSAGE}'
+        git push
