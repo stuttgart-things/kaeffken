@@ -9,7 +9,7 @@ on:
 
 jobs:
   Go-Release:
-    runs-on: arc-runner-scale-set-vault-base-setup
+    runs-on: arc-runner-scale-set-kaeffken
     container:
       image: goreleaser/goreleaser-cross:v1.21.5
     environment: k8s
