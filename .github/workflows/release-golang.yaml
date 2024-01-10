@@ -1,0 +1,23 @@
+---
+name: Build binaries with goreleaser
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  Go-Release:
+    runs-on: arc-runner-scale-set-vault-base-setup
+    container:
+      image: goreleaser/goreleaser-cross:v1.21.5
+    environment: k8s
+    continue-on-error: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v5.0.0
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
