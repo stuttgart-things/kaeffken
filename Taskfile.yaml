@@ -62,4 +62,4 @@ tasks:
         git add cmd/*
         git add modules/*
         git commit -am '${COMMIT_MESSAGE}'
-        git push
+        git push origin HEAD
