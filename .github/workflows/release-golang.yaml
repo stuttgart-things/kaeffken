@@ -2,6 +2,8 @@
 name: Build binaries with goreleaser
 on:
   push:
+    branches:
+      - main
     tags:
       - '*'
 
