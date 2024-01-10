@@ -57,9 +57,9 @@ tasks:
     cmds:
       - git pull
       - |
-        echo "Enter commit message"
+        echo "ENTER COMMIT MESSAGE"
         read COMMIT_MESSAGE;
         git add cmd/*
         git add modules/*
         git commit -am '${COMMIT_MESSAGE}'
-        git push origin HEAD
+        git push origin -u {{ .BRANCH }}
