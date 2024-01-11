@@ -25,9 +25,7 @@ jobs:
           ls -lta
           pwd
           git config --global --add safe.directory /__w/kaeffken/kaeffken
-          git checkout main
-          git pull
-          
+          git pull origin main          
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
