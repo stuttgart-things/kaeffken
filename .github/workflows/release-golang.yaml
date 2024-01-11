@@ -10,18 +10,22 @@ on:
 jobs:
   Go-Release:
     runs-on: arc-runner-scale-set-kaeffken
-    permissions:
-      contents: write    
     container:
-      image: goreleaser/goreleaser:v1.23.0
+      image: golang:1.21.5
     environment: k8s
     continue-on-error: false
-    steps:
+    steps: 
       - name: Checkout code
         uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v4
       - name: Run GoReleaser
-        run: |
-          ls -lta
-          goreleaser check
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
