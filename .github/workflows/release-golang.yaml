@@ -20,10 +20,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4.1.1
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v5.0.0
-        with:
-          distribution: goreleaser
-          version: latest
-          args: release --clean
+        run: |
+          ls -lta
+          goreleaser check
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
