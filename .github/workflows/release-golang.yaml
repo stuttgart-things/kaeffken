@@ -23,6 +23,7 @@ jobs:
         run: |
           ls -lta
           pwd
+          git config --global --add safe.directory /__w/kaeffken/kaeffken
           git pull
           
       - name: Run GoReleaser
