@@ -20,7 +20,9 @@ jobs:
       - name: Check code/git
         run: |
           ls -lta
-          git config --global --add safe.directory '*'
+          env
+          git config --global --add safe.directory /__w/*
+          #git config --global --add safe.directory /__w/kaeffken/kaeffken
           git pull
       - name: Release binaries
         uses: goreleaser/goreleaser-action@v5
