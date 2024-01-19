@@ -4,6 +4,7 @@ Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 package modules
 
 import (
+	"encoding/json"
 	"fmt"
 	"path/filepath"
 
@@ -11,6 +12,31 @@ import (
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 )
+
+type Kustomization struct {
+	Name, Namespace, Version, Path string
+	SourceRef                      SourceRef
+	VersionTarget                  VersionTarget
+	Substitute                     Substitute
+}
+
+type DefaultKustomizations struct {
+	Defaults []Kustomization
+}
+
+type Substitute struct {
+	Variables        map[string]string
+	Secrets          map[string]string
+	SecretsResources []string
+}
+
+type VersionTarget struct {
+	Name, Kind, Namespace, Path, Version string
+}
+
+type SourceRef struct {
+	Name, Kind string
+}
 
 // LOAD CLUSTERFILE - DEFAULT IS <ROOT>/<ENV>/<LAB>/clusters.yaml
 func LoadDataFromRepository(repository billy.Filesystem, filePath string) (loadedFile string) {
@@ -33,4 +59,15 @@ func LoadDataFromRepository(repository billy.Filesystem, filePath string) (loade
 		log.Error("FILE DOES NOT EXIST IN REPOSITORY: ", filePath)
 		return
 	}
+}
+
+func LoadDefaultKustomizations(fileContent string) (defaults DefaultKustomizations) {
+
+	err := json.Unmarshal([]byte(fileContent), &defaults)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return defaults
+
 }
