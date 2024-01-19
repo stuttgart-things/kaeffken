@@ -4,7 +4,8 @@ gitops cluster management cli
 ## DEPLOY
 
 ```bash
-kaeffken --name michigan --env labul
+kaeffken --name [CLUSTERNAME]
+#kaeffken --name michigan --env labul
 ```
 
 
