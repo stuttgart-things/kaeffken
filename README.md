@@ -1,10 +1,17 @@
 # kaeffken
-gitops cluster management cli 
+gitops cluster management cli
+
+## DEPLOY
+
+```bash
+kaeffken --name michigan --env labul
+```
+
 
 ## Author Information
 
 ```bash
-Patrick Hermann, stuttgart-things 12/2019
+Patrick Hermann, stuttgart-things 12/2023
 ```
 
 ## License

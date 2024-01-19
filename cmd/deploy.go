@@ -34,6 +34,7 @@ var deployCmd = &cobra.Command{
 		values["envPath"], _ = cmd.LocalFlags().GetString("env")
 		values["clusterName"], _ = cmd.LocalFlags().GetString("name")
 		values["clustersfileName"], _ = cmd.LocalFlags().GetString("clustersfile")
+		values["infraCatalogPath"], _ = cmd.LocalFlags().GetString("infra")
 
 		// SET VARS
 		values["clusterPath"] = values["rootPath"] + "/" + values["envPath"] + "/" + values["clusterName"]
@@ -53,20 +54,30 @@ var deployCmd = &cobra.Command{
 			os.Exit(3)
 		}
 
-		// LOAD CLUSTERSFILE
+		// LOAD CLUSTERSFILE FROM GIT
 		clustersFile := modules.LoadDataFromRepository(repository, values["clusterFilePath"])
 		fmt.Println(clustersFile)
+		log.Info("CLUSTERSFILE LOADED: ", values["clusterFilePath"])
 
-		// LOAD FLUX INFRA CATALOGUE
-		infraCatalogue := modules.LoadDataFromRepository(repository, "clusters/config/infraCatalog.json")
+		// ADD HERE LOAD OF CLUSTERSFILE
+
+		// LOAD FLUX INFRA CATALOGUE FROM GIT
+		infraCatalogue := modules.LoadDataFromRepository(repository, values["infraCatalogPath"])
 		fmt.Println(infraCatalogue)
+
+		// LOAD DEFAULT KUSTOMIZATIONS FROM JSON STRING
+		infraDefaults := modules.LoadDefaultKustomizations(infraCatalogue)
+		log.Info("INFRA CATALOG LOADED: ", values["infraCatalogPath"])
+		fmt.Println(infraDefaults)
+
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(deployCmd)
 	deployCmd.Flags().String("root", "clusters", "cluster root path in repository")
-	deployCmd.Flags().String("env", "labul/vsphere", "env path in repository")
+	deployCmd.Flags().String("env", "labul", "env path in repository")
 	deployCmd.Flags().String("name", "", "cluster name")
 	deployCmd.Flags().String("clustersfile", "clusters.yaml", "clustersfile name")
+	deployCmd.Flags().String("infra", "clusters/config/infraCatalog.json", "infra catalog")
 }
