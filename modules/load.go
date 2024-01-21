@@ -71,3 +71,32 @@ func LoadDefaultKustomizations(fileContent string) (defaults DefaultKustomizatio
 	return defaults
 
 }
+
+func LoadClustersfile(yamlFileContent string) {
+
+	fmt.Println(yamlFileContent)
+	var allClusters Clusters
+
+	allClusters = sthingsCli.ReadInlineYamlToObject([]byte(yamlFileContent), allClusters).(Clusters)
+	fmt.Println(allClusters.ClusterProfile)
+
+	for _, cluster := range allClusters.ClusterProfile {
+
+		fmt.Println(cluster)
+		for key, value := range cluster {
+			fmt.Println(key, value)
+
+		}
+
+	}
+
+}
+
+type Clusters struct {
+	ClusterProfile []map[string]Cluster `mapstructure:"clusters"`
+}
+
+type Cluster struct {
+	Cloud string   `mapstructure:"cloud"`
+	Ips   []string `mapstructure:"ips"`
+}

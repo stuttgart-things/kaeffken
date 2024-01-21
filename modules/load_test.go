@@ -10,6 +10,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestLoadClustersfile(t *testing.T) {
+
+	LoadClustersfile(yamlExample)
+}
+
 func TestLoadDefaultKustomizations(t *testing.T) {
 	assert := assert.New(t)
 	expectedDefaultApps := "ingress-nginxlonghornmetallbcert-manager"
@@ -60,6 +65,16 @@ func TestLoadDataFromRepository(t *testing.T) {
 }
 
 var (
+	yamlExample = `clusters:
+  - sthings-app1:
+      cloud: vsphere
+      ips:
+        - 12.23.44.22
+  - sthings-dev1:
+      cloud: vsphere
+      ips:
+        - 2324.43.2.1`
+
 	infraCatalog = `{
 		"Defaults": [
 		 {
