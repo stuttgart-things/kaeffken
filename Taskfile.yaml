@@ -76,7 +76,6 @@ tasks:
       - gh pr merge $(gh pr list | grep "^[^#;]" | awk '{print $1}') --auto --rebase --delete-branch
       - git checkout main && git pull
 
-
   delete-branch:
     desc: Delete branch from origin
     cmds:
