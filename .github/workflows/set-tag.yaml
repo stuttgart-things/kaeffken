@@ -1,6 +1,6 @@
 name: Set git tag
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       tag-name:
         required: true
