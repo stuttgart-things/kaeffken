@@ -1,0 +1,27 @@
+name: Set git tag
+on:
+  workflow_call:
+    inputs:
+      tag-name:
+        required: true
+        type: string
+
+jobs:
+  publish:
+    permissions:
+      contents: write
+    runs-on: arc-runner-scale-set-kaeffken
+    container:
+      image: alpine:3.19.0
+    environment: k8s
+    steps:
+      - name: Create Tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/v${{ inputs.tag-name }}',
+              sha: context.sha
+            })
