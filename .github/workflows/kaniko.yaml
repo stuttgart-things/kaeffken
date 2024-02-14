@@ -1,0 +1,19 @@
+---
+name: Kaniko Build
+on:
+  workflow_dispatch:
+
+jobs:
+  kaniko:
+    environment: k8s
+    runs-on: arc-runner-scale-set-sthings-slides
+    steps:
+      - uses: actions/checkout@master
+      - name: Kaniko build
+        uses: aevea/action-kaniko@master
+        with:
+          image: aevea/kaniko
+          registry: ghcr.io
+          password: ${{ secrets.TOKEN }}
+          cache: true
+          cache_registry: aevea/cache
