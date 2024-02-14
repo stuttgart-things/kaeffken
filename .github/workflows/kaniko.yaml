@@ -4,31 +4,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: arc-runner-scale-set-kaeffken
-    environment: k8s
-    container:
-      image: gcr.io/kaniko-project/executor:debug # the kaniko image
-    permissions:
-      contents: read # read the repository
-      packages: write # push to GHCR, omit if not pushing to GitHub's container registry
-
-    steps:
-    
-      - name: Build and push container test
-        run: |
-          # Write config file, change to your destination registry
-          AUTH=$(echo -n ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} | base64)
-          echo $AUTH
-          echo ${{ secrets.DOCKER }} | base64 -d > /kaniko/.docker/config.json
-          cat /kaniko/.docker/config.json
-          # Configure git
-          export GIT_USERNAME="kaniko-bot"
-          export GIT_PASSWORD="${{ secrets.GITHUB_TOKEN }}" # works for GHEC or GHES container registry
-
-          # Build and push (sub in your image, of course)
-          /kaniko/executor --dockerfile="./Dockerfile" \
-            --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}" \
-            --destination="ghcr.io/stuttgart-things/kaeffken/kaniko-build:test" \
-            --push-retry 5 \
-            --image-name-with-digest-file /workspace/image-digest.txt
+  Build-Kaniko-Image:
+    name: Build Kaniko
+    uses: stuttgart-things/stuttgart-things/.github/workflows/build-kaniko.yaml@main
+    with:
+      tag-name: ${{ github.event.inputs.release-tag }}
+      environment-name: k8s
+      runs-on: arc-runner-scale-set-kaeffken
+      dockerfile: ./Dockerfile
+      registry: ghcr.io
+      repository: stuttgart-things/kaeffken
+      image: kaniko-build
+      tag: test2
+    secrets: inherit
