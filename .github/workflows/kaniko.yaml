@@ -24,9 +24,9 @@ jobs:
           # Write config file, change to your destination registry
           AUTH=$(echo -n ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} | base64)
           echo ${{ github.actor }}
-          cat $AUTH
+          echo $AUTH
           echo "{\"auths\": {\"ghcr.io\": {\"auth\": \"${AUTH}\"}}}" > /kaniko/.docker/config.json
-
+          cat /kaniko/.docker/config.json
           # Configure git
           export GIT_USERNAME="kaniko-bot"
           export GIT_PASSWORD="${{ secrets.GITHUB_TOKEN }}" # works for GHEC or GHES container registry
