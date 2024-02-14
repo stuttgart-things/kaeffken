@@ -6,7 +6,7 @@ on:
 jobs:
   kaniko:
     environment: k8s
-    runs-on: arc-runner-scale-set-sthings-slides
+    runs-on: arc-runner-scale-set-kaeffken
     steps:
       - uses: actions/checkout@master
       - name: Kaniko build
