@@ -14,18 +14,16 @@ jobs:
       packages: write # push to GHCR, omit if not pushing to GitHub's container registry
 
     steps:
-      #- name: Checkout code
-      #  uses: actions/checkout@v4.1.1
-      #  with:
-      #    fetch-depth: '0'
     
       - name: Build and push container test
         run: |
           # Write config file, change to your destination registry
           AUTH=$(echo -n ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} | base64)
-          echo ${{ github.actor }}
-          echo $AUTH
-          echo "{\"auths\": {\"ghcr.io\": {\"auth\": \"${AUTH}\"}}}" > /kaniko/.docker/config.json
+          #echo ${{ github.actor }}
+          #echo $AUTH
+          #echo "{\"auths\": {\"ghcr.io\": {\"auth\": \"${AUTH}\"}}}" > /kaniko/.docker/config.json
+
+          echo ${{ secrets.DOCKER }} > /kaniko/.docker/config.json
           cat /kaniko/.docker/config.json
           # Configure git
           export GIT_USERNAME="kaniko-bot"
