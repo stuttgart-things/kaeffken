@@ -23,6 +23,8 @@ jobs:
         run: |
           # Write config file, change to your destination registry
           AUTH=$(echo -n ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} | base64)
+          echo ${{ github.actor }}
+          cat $AUTH
           echo "{\"auths\": {\"ghcr.io\": {\"auth\": \"${AUTH}\"}}}" > /kaniko/.docker/config.json
 
           # Configure git
