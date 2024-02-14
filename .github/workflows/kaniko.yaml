@@ -25,7 +25,7 @@ jobs:
           export GIT_PASSWORD="${{ secrets.GITHUB_TOKEN }}" # works for GHEC or GHES container registry
 
           # Build and push (sub in your image, of course)
-          /kaniko/executor --dockerfile="./images/ubi9.Dockerfile" \
+          /kaniko/executor --dockerfile="./Dockerfile" \
             --context="${{ github.repositoryUrl }}#${{ github.ref }}#${{ github.sha }}" \
             --destination="ghcr.io/some-natalie/kubernoodles/kaniko-build:test" \
             --push-retry 5 \
