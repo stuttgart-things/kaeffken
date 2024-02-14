@@ -23,7 +23,7 @@ jobs:
           #echo $AUTH
           #echo "{\"auths\": {\"ghcr.io\": {\"auth\": \"${AUTH}\"}}}" > /kaniko/.docker/config.json
 
-          echo ${{ secrets.DOCKER }} > /kaniko/.docker/config.json
+          echo ${{ secrets.DOCKER }} | base64 -d > /kaniko/.docker/config.json
           cat /kaniko/.docker/config.json
           # Configure git
           export GIT_USERNAME="kaniko-bot"
