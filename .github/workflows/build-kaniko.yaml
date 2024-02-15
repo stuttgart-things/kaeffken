@@ -22,7 +22,7 @@ on:
         default: kaeffken
       tag:
         type: string
-        description: Image name       
+        description: Image tag       
         
 jobs:
   Build-Kaniko-Image:
