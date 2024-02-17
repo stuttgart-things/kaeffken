@@ -8,8 +8,7 @@ kaeffken --name [CLUSTERNAME]
 #kaeffken --name michigan --env labul
 ```
 
-
-## Author Information
+## AUTHOR
 
 ```bash
 Patrick Hermann, stuttgart-things 12/2023
