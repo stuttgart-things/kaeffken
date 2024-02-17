@@ -1,5 +1,5 @@
 # kaeffken
-gitops cluster management cli.
+gitops cluster management cli
 
 ## DEPLOY
 
