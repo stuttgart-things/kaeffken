@@ -15,7 +15,6 @@ vars:
     sh: git describe --tags --abbrev=0
 
 tasks:
-
   tests:
     desc: Built cli tests
     deps:
