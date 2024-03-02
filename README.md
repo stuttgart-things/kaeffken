@@ -1,12 +1,35 @@
-# kaeffken
+# stuttgart-things/kaeffken
 gitops cluster management cli
 
-## DEPLOY
+<details><summary><b>DEPLOY</b></summary>
 
 ```bash
 kaeffken --name [CLUSTERNAME]
 #kaeffken --name michigan --env labul
 ```
+
+</details>
+
+<details><summary><b>ENCRYPT</b></summary>
+
+```bash
+cat <<EOF >> tests/secret.yaml
+kind: Secret
+apiVersion: v1
+metadata:
+  name: secret
+data:
+  password: wHat6ver
+EOF
+```
+
+```bash
+kaeffken encrypt \
+--source tests/secret.yaml \
+--output stdout
+```
+
+</details>
 
 ## AUTHOR
 

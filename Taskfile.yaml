@@ -16,6 +16,13 @@ vars:
 
 tasks:
 
+  tests:
+    desc: Built cli tests
+    deps:
+      - build
+    cmds:
+      - kaeffken encrypt --source tests/secret.yaml --output stdout
+
   branch:
     desc: Create branch from main
     cmds:
@@ -29,6 +36,12 @@ tasks:
         git push origin ${BRANCH_NAME}
       - git branch
       - git branch --set-upstream-to=origin/main ${BRANCH_NAME}
+
+  build:
+    desc: Build code
+    cmds:
+      - go mod tidy
+      - go install
 
   lint:
     desc: Lint code
