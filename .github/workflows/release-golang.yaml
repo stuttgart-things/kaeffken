@@ -17,7 +17,7 @@ jobs:
     with:
       tag-name: ${{ github.event.inputs.release-tag }}
       environment-name: k8s
-      runs-on: arc-runner-scale-set-kaeffken
+      runs-on: ghr-kaeffken-sthings-cicd
       alpine-version: 3.19.0
       continue-error: false
     secrets: inherit
@@ -30,7 +30,7 @@ jobs:
     with:
       module-name: kaeffken
       environment-name: k8s
-      runs-on: arc-runner-scale-set-kaeffken
+      runs-on: ghr-kaeffken-sthings-cicd
       goreleaser-version: v1.23.0
       golang-version: "1.21.5"
     secrets: inherit
@@ -42,7 +42,7 @@ jobs:
     needs: Create-Git-Tag
     with:
       environment-name: k8s
-      runs-on: arc-runner-scale-set-kaeffken
+      runs-on: ghr-kaeffken-sthings-cicd
       dockerfile: ./Dockerfile
       registry: ghcr.io
       repository: stuttgart-things/kaeffken
