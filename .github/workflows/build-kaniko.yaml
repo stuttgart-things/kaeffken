@@ -30,7 +30,7 @@ jobs:
     uses: stuttgart-things/stuttgart-things/.github/workflows/build-kaniko.yaml@main
     with:
       environment-name: k8s
-      runs-on: ghr-kaeffken-sthings-cicd
+      runs-on: ghr-kaeffken-losangeles4
       dockerfile: ./Dockerfile
       registry: "${{ github.event.inputs.registry }}"
       repository: "${{ github.event.inputs.repository }}"
