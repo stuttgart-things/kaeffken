@@ -27,7 +27,7 @@ on:
 jobs:
   Build-Kaniko-Image:
     name: Build Kaniko
-    uses: stuttgart-things/stuttgart-things/.github/workflows/build-kaniko.yaml@main
+    uses: stuttgart-things/stuttgart-things/.github/workflows/call-kaniko-build.yaml@main
     with:
       environment-name: k8s
       runs-on: ghr-kaeffken-losangeles4
