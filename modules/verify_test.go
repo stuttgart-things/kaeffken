@@ -34,3 +34,53 @@ func TestVerifyValues(t *testing.T) {
 	}
 
 }
+
+func TestSetAppParameter(t *testing.T) {
+	// Define test cases
+	tests := []struct {
+		name              string
+		appValue          string
+		appDefault        string
+		technologyDefault string
+		expected          string
+	}{
+		{
+			name:              "App value is set",
+			appValue:          "appValue",
+			appDefault:        "appDefault",
+			technologyDefault: "technologyDefault",
+			expected:          "appValue",
+		},
+		{
+			name:              "App value is empty, app default is set",
+			appValue:          "",
+			appDefault:        "appDefault",
+			technologyDefault: "technologyDefault",
+			expected:          "appDefault",
+		},
+		{
+			name:              "App value and app default are empty, technology default is set",
+			appValue:          "",
+			appDefault:        "",
+			technologyDefault: "technologyDefault",
+			expected:          "technologyDefault",
+		},
+		{
+			name:              "All values are empty",
+			appValue:          "",
+			appDefault:        "",
+			technologyDefault: "",
+			expected:          "",
+		},
+	}
+
+	// Run test cases
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := SetAppParameter(tt.appValue, tt.appDefault, tt.technologyDefault)
+			if result != tt.expected {
+				t.Errorf("SetAppParameter(%q, %q, %q) = %q; want %q", tt.appValue, tt.appDefault, tt.technologyDefault, result, tt.expected)
+			}
+		})
+	}
+}

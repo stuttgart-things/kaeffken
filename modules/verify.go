@@ -38,3 +38,13 @@ func VerifyValues(values map[string]string, mandatoryFlags []string) (validValue
 
 	return validValues
 }
+
+func SetAppParameter(appValue, appDefault, technologyDefault string) string {
+	if appValue != "" {
+		return appValue
+	} else if appDefault != "" {
+		return appDefault
+	} else {
+		return technologyDefault
+	}
+}
