@@ -16,90 +16,127 @@ import (
 var (
 	appsCmd = &cobra.Command{
 		Use:   "apps",
-		Short: "apps will render app configs",
-		Long: `Print the apps information. For example:
-	sthings apps`,
+		Short: "render apps configs",
+		Long:  `render apps configs for different app kinds`,
+		Run: func(cmd *cobra.Command, args []string) {
 
-		Run: func(_ *cobra.Command, _ []string) {
-			Flux()
+			appKind, _ := cmd.LocalFlags().GetString("kind")
+			renderedTemplates := make(map[string]string)
+
+			// outputFormat, _ := cmd.LocalFlags().GetString("output")
+
+			switch appKind {
+			case "flux":
+				renderedTemplates = RenderFlux()
+			default:
+				log.Error("Unknown app kind: ", appKind)
+			}
+
+			HandleRenderOutput(renderedTemplates, "stdout", "")
+
 		},
 	}
 )
 
-func Flux() {
-	fmt.Println("HELLO")
+func RenderFlux() (renderedTemplates map[string]string) {
 
-	// Read flux defaults
-	fluxDefaults, err := modules.ReadYAMLFile[models.FluxDefaults]("/home/patrick/projects/kaeffken/tests/flux-defaults.yaml")
+	renderedTemplates = make(map[string]string)
+
+	pathFluxDefaults := "/home/patrick/projects/kaeffken/tests/flux-defaults.yaml"
+	pathFluxAppDefaults := "/home/patrick/projects/kaeffken/tests/app-defaults.yaml"
+	pathAppValues := "/home/patrick/projects/kaeffken/tests/apps.yaml"
+
+	fluxDefaults, err := modules.ReadYAMLFile[models.FluxDefaults](pathFluxDefaults)
 	if err != nil {
-		log.Fatalf("Error reading flux-defaults.yaml: %v", err)
+		log.Error("Error reading ", pathFluxDefaults)
 	}
-	fmt.Printf("Flux Defaults: %+v\n", fluxDefaults)
 
 	// Read app defaults
-	appDefaults, err := modules.ReadYAMLFile[models.AppDefaults]("/home/patrick/projects/kaeffken/tests/app-defaults.yaml")
+	appDefaults, err := modules.ReadYAMLFile[models.AppDefaults](pathFluxAppDefaults)
 	if err != nil {
-		log.Fatalf("Error reading flux-defaults.yaml: %v", err)
+		log.Error("Error reading ", pathFluxAppDefaults)
 	}
-	fmt.Printf("App Defaults: %+v\n", appDefaults)
 
 	// Read app values
-	appValues, err := modules.ReadYAMLFile[models.Apps]("/home/patrick/projects/kaeffken/tests/apps.yaml")
+	appValues, err := modules.ReadYAMLFile[models.Apps](pathAppValues)
 	if err != nil {
-		log.Fatalf("Error reading flux-defaults.yaml: %v", err)
+		log.Error("Error reading ", pathAppValues)
 	}
-	fmt.Printf("App Defaults: %+v\n", appValues)
 
-	for key, appValues := range appValues.Flux {
+	log.Info("FLUX DEFAULT: ", fluxDefaults)
+	log.Info("FLUX APP DEFAULTS: ", appDefaults)
+	log.Info("APP VALUES: ", appValues)
+
+	for appkey, appValues := range appValues.Flux {
 
 		// CHECK IF APP(KEY) EXISTS IN fluxDefaults
-		if _, ok := fluxDefaults.FluxAppDefaults[key]; ok {
+		if _, ok := fluxDefaults.FluxAppDefaults[appkey]; ok {
 
-			fmt.Println("FOUND THE APP!")
+			log.Info("FOUND FLUX APP! ", appkey)
 
 			// SET SUBSTITUTION VARIABLES
-			defaultVariables := fluxDefaults.FluxAppDefaults[key].Variables
+			defaultVariables := fluxDefaults.FluxAppDefaults[appkey].Variables
 			flagVariables := appValues.Variables
 
 			// MERGE DEFAULT VARIABLES + VALUES
 			variables := sthingsBase.MergeMaps(defaultVariables, flagVariables)
-			fmt.Println("MERGED VARS: ", variables)
+			log.Info("MERGED VARS: ", variables)
 
 			substituteValues := make(map[string]interface{})
 			for _, variable := range variables {
 				substituteValues[variable.Name] = variable.Value
 			}
 
-			fmt.Println("DEFAULT SPPPEEECC", appDefaults.FluxKustomization.Spec)
-			fmt.Println("APP SPPPEEECC", appValues.Spec)
-
 			kustomization := models.Kustomization{
 				APIVersion: appDefaults.FluxKustomization.CR.APIVersion,
 				Kind:       appDefaults.FluxKustomization.CR.Kind,
-				Metadata:   models.Metadata{Name: modules.SetAppParameter(appValues.Name, key, "NOT-DEFINED"), Namespace: appDefaults.FluxKustomization.CR.Namespace},
+				Metadata:   models.Metadata{Name: modules.SetAppParameter(appValues.Name, appkey, "NOT-DEFINED"), Namespace: appDefaults.FluxKustomization.CR.Namespace},
 				Spec: models.Spec{
-					Interval:      modules.SetAppParameter(appValues.Spec.Interval, fluxDefaults.FluxAppDefaults[key].Spec.Interval, appDefaults.FluxKustomization.Spec.Interval),
-					RetryInterval: modules.SetAppParameter(appDefaults.FluxKustomization.Spec.RetryInterval, fluxDefaults.FluxAppDefaults[key].Spec.RetryInterval, appDefaults.FluxKustomization.Spec.RetryInterval),
-					Timeout:       modules.SetAppParameter(appDefaults.FluxKustomization.Spec.Timeout, fluxDefaults.FluxAppDefaults[key].Spec.Timeout, appDefaults.FluxKustomization.Spec.Timeout),
-					SourceRef:     models.SourceRef{Kind: modules.SetAppParameter(appDefaults.FluxKustomization.Spec.SourceRef.Kind, fluxDefaults.FluxAppDefaults[key].Spec.SourceRef.Kind, appDefaults.FluxKustomization.Spec.SourceRef.Kind), Name: modules.SetAppParameter(appDefaults.FluxKustomization.Spec.SourceRef.Name, fluxDefaults.FluxAppDefaults[key].Spec.SourceRef.Name, appDefaults.FluxKustomization.Spec.SourceRef.Name)},
-					PostBuild:     models.PostBuild{Substitute: substituteValues},
+					Interval:      modules.SetAppParameter(appValues.Spec.Interval, fluxDefaults.FluxAppDefaults[appkey].Spec.Interval, appDefaults.FluxKustomization.Spec.Interval),
+					RetryInterval: modules.SetAppParameter(appValues.Spec.RetryInterval, fluxDefaults.FluxAppDefaults[appkey].Spec.RetryInterval, appDefaults.FluxKustomization.Spec.RetryInterval),
+					Timeout:       modules.SetAppParameter(appValues.Spec.Timeout, fluxDefaults.FluxAppDefaults[appkey].Spec.Timeout, appDefaults.FluxKustomization.Spec.Timeout),
+					Path:          modules.SetAppParameter("", fluxDefaults.FluxAppDefaults[appkey].Path, ""),
+					SourceRef: models.SourceRef{
+						Kind: modules.SetAppParameter(appDefaults.FluxKustomization.Spec.SourceRef.Kind, fluxDefaults.FluxAppDefaults[appkey].Spec.SourceRef.Kind, appDefaults.FluxKustomization.Spec.SourceRef.Kind),
+						Name: modules.SetAppParameter(appDefaults.FluxKustomization.Spec.SourceRef.Name, fluxDefaults.FluxAppDefaults[appkey].Spec.SourceRef.Name, appDefaults.FluxKustomization.Spec.SourceRef.Name),
+					},
+					PostBuild: models.PostBuild{Substitute: substituteValues},
 				},
 			}
 
 			rendered, err := modules.RenderTemplate(models.TemplateFluxKustomization, kustomization)
 			if err != nil {
-				log.Fatalf("Error rendering template: %v", err)
+				log.Error("Error reading template ", err)
 			}
 
-			fmt.Println(rendered)
+			log.Info("TEMPLATE WAS RENDERED ", appkey)
+			renderedTemplates[appkey] = rendered
+			// fmt.Println(rendered)
 
 		} else {
-			fmt.Println("APP NOT FOUND!")
+			log.Error("APP NOT FOUND! ", appkey)
 		}
+	}
+	return
+}
+
+func HandleRenderOutput(renderedTemplates map[string]string, outputFormat, destinationPath string) {
+
+	for _, renderedTemplate := range renderedTemplates {
+
+		if outputFormat == "stdout" {
+			fmt.Println(renderedTemplate)
+		} else {
+			log.Info("output file written to ", destinationPath)
+			sthingsBase.WriteDataToFile(destinationPath, renderedTemplate)
+		}
+
 	}
 
 }
 
 func init() {
 	rootCmd.AddCommand(appsCmd)
+	appsCmd.Flags().String("kind", "flux", "app kind: flux|")
+	appsCmd.Flags().String("output", "stdout", "outputFormat stdout|file")
 }

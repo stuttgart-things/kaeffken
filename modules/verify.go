@@ -39,10 +39,11 @@ func VerifyValues(values map[string]string, mandatoryFlags []string) (validValue
 	return validValues
 }
 
-func SetAppParameter(appValue, appDefault, technologyDefault string) string {
-	if appValue != "" {
+func SetAppParameter[T comparable](appValue, appDefault, technologyDefault T) T {
+	var zero T
+	if appValue != zero {
 		return appValue
-	} else if appDefault != "" {
+	} else if appDefault != zero {
 		return appDefault
 	} else {
 		return technologyDefault
