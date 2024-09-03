@@ -15,7 +15,7 @@ jobs:
     with:
       module-name: kaeffken
       environment-name: k8s
-      runs-on: ghr-kaeffken-losangeles4
+      runs-on: ghr-kaeffken-skyami-cicd
       golint-version: v1.55
       golang-version: "1.21.5"
       accept-linterrors: true
