@@ -63,7 +63,7 @@ type Apps struct {
 	Flux map[string]FluxApp `yaml:"flux"`
 }
 
-var TemplateFluxKustomization = `
+var TemplateFluxKustomization = `---
 apiVersion: {{.APIVersion}}
 kind: {{.Kind}}
 metadata:

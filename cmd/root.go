@@ -13,6 +13,8 @@ import (
 )
 
 var (
+	token = os.Getenv("GITHUB_TOKEN")
+
 	gitRepository string
 	logFilePath   string
 	gitBranch     string

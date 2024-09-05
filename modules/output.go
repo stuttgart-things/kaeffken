@@ -34,3 +34,19 @@ func HandleOutput(outputFormat, destinationPath, renderedTemplate string) {
 	}
 
 }
+
+func HandleRenderOutput(renderedTemplates map[string]string, outputFormat, destinationPath string) {
+
+	for appKey, renderedTemplate := range renderedTemplates {
+
+		if outputFormat == "stdout" {
+			fmt.Println(renderedTemplate)
+		} else {
+			// sthingsBase.CreateNestedDirectoryStructure(destinationPath, 0600)
+			log.Info("output file written to ", destinationPath+"/"+appKey+".yaml")
+			sthingsBase.WriteDataToFile(destinationPath+"/"+appKey+".yaml", renderedTemplate)
+		}
+
+	}
+
+}

@@ -20,6 +20,8 @@ var (
 		Long:  `render apps configs for different app kinds`,
 		Run: func(cmd *cobra.Command, args []string) {
 
+			fmt.Println(token)
+
 			appKind, _ := cmd.LocalFlags().GetString("kind")
 			renderedTemplates := make(map[string]string)
 
@@ -32,7 +34,7 @@ var (
 				log.Error("Unknown app kind: ", appKind)
 			}
 
-			HandleRenderOutput(renderedTemplates, "stdout", "")
+			modules.HandleRenderOutput(renderedTemplates, "file", "/tmp")
 
 		},
 	}
@@ -118,21 +120,6 @@ func RenderFlux() (renderedTemplates map[string]string) {
 		}
 	}
 	return
-}
-
-func HandleRenderOutput(renderedTemplates map[string]string, outputFormat, destinationPath string) {
-
-	for _, renderedTemplate := range renderedTemplates {
-
-		if outputFormat == "stdout" {
-			fmt.Println(renderedTemplate)
-		} else {
-			log.Info("output file written to ", destinationPath)
-			sthingsBase.WriteDataToFile(destinationPath, renderedTemplate)
-		}
-
-	}
-
 }
 
 func init() {
