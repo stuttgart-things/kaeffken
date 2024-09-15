@@ -1,5 +1,6 @@
 # stuttgart-things/kaeffken
-gitops cluster management cli
+
+gitops apps & cluster management cli
 
 <details><summary><b>DEPLOY</b></summary>
 

@@ -17,6 +17,6 @@ jobs:
       environment-name: k8s
       runs-on: ghr-kaeffken-skyami-cicd
       golint-version: v1.55
-      golang-version: "1.21.5"
+      golang-version: "1.23.1"
       accept-linterrors: true
       accept-failedtests: false
