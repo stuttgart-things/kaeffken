@@ -43,10 +43,25 @@ var (
 func RenderFlux() (renderedTemplates map[string]string) {
 
 	renderedTemplates = make(map[string]string)
+	// appTemplatesFiles := make(map[string]string)
 
+	// gitHubToken := os.Getenv("GITHUB_TOKEN")
+
+	// GET APP TEMPLATE FILES FROM LOCAL FILES
 	pathFluxDefaults := "/home/patrick/projects/kaeffken/tests/flux-defaults.yaml"
 	pathFluxAppDefaults := "/home/patrick/projects/kaeffken/tests/app-defaults.yaml"
 	pathAppValues := "/home/patrick/projects/kaeffken/tests/apps.yaml"
+
+	// client := modules.CreateGithubClient(gitHubToken)
+	// fmt.Println(client)
+
+	owner, repo, branch, path, _ := modules.ParseGitHubURL("https://github.com/stuttgart-things/stuttgart-things.git@main:kaeffken/apps/flux/app-defaults.yaml")
+	fmt.Println(owner, repo, branch, path)
+
+	// fileContent := modules.GetFileContentFromFileInGitHubRepo(client, "stuttgart-things", "stuttgart-things", "main", "kaeffken/apps/flux/app-defaults.yaml")
+	// fmt.Println(fileContent)
+
+	// sthingsCli.GetFileContentFromGithubRepo
 
 	fluxDefaults, err := modules.ReadYAMLFile[models.FluxDefaults](pathFluxDefaults)
 	if err != nil {

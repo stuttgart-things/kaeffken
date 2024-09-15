@@ -10,7 +10,7 @@ kaeffken --name [CLUSTERNAME]
 
 </details>
 
-<details><summary><b>ENCRYPT</b></summary>
+<details><summary><b>ENCRYPT FILE</b></summary>
 
 ```bash
 cat <<EOF >> tests/secret.yaml
@@ -26,6 +26,17 @@ EOF
 ```bash
 kaeffken encrypt \
 --source tests/secret.yaml \
+--output stdout
+```
+
+</details>
+
+<details><summary><b>RENDER (BUILTIN) TEMPLATE AND ENCRYPT FILE</b></summary>
+
+```bash
+kaeffken encrypt \
+--template k8s \
+--values "password=mysecretvalue, username=admin" \
 --output stdout
 ```
 
