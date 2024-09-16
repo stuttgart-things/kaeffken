@@ -13,6 +13,8 @@ vars:
     sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD) ; fi
   VERSION:
     sh: git describe --tags --abbrev=0
+  GIT_REPO: codehub.sva.de/Lab/stuttgart-things/dev/homerun-event-catcher
+  IMAGE_REPO: scr.cd43.sthings-pve.labul.sva.de/homerun
 
 tasks:
   tests:
@@ -68,14 +70,19 @@ tasks:
   commit:
     desc: Commit + push code into branch
     cmds:
+      - rm -rf dist/
+      - git branch --set-upstream-to=origin/{{ .BRANCH }}
       - git pull
       - |
         echo "ENTER COMMIT MESSAGE"
         read COMMIT_MESSAGE;
-        git add cmd/*
-        git add .github/workflows/*
-        git add modules/*
-        git commit -am "$(echo ${COMMIT_MESSAGE})"
+        git add *
+        if [[ -n $(git status --porcelain) ]]; then
+          echo "committing changes"
+          git commit --allow-empty -a -m "$(echo ${COMMIT_MESSAGE})"
+        else
+          echo "no changes"
+        fi
         git push origin -u {{ .BRANCH }}
 
   pr:
@@ -113,3 +120,14 @@ tasks:
         read TAG;
       - git tag -a '$(echo ${TAG})' -m "updated for tag $(echo ${TAG})"
       - git push origin --tags
+
+  build-ko:
+    desc: Build KO Image
+    deps: [commit]
+    cmds:
+      - |
+        BUILD_IMAGE=$(ko build --preserve-import-paths --image-label org.opencontainers.image.source={{ .GIT_REPO }})
+        echo "Built image: ${BUILD_IMAGE}"
+    env:
+      KO_DOCKER_REPO: "{{ .IMAGE_REPO }}"
+      KO_REPO: "{{ .GIT_REPO }}"

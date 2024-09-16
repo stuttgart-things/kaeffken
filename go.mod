@@ -2,8 +2,6 @@ module github.com/stuttgart-things/kaeffken
 
 go 1.23.1
 
-toolchain go1.23.1
-
 require (
 	github.com/fatih/color v1.17.0
 	github.com/go-git/go-billy/v5 v5.5.0
