@@ -10,11 +10,11 @@ vars:
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
   BRANCH:
-    sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD) ; fi
+    sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD); else echo main ; fi
   VERSION:
     sh: git describe --tags --abbrev=0
-  GIT_REPO: codehub.sva.de/Lab/stuttgart-things/dev/homerun-event-catcher
-  IMAGE_REPO: scr.cd43.sthings-pve.labul.sva.de/homerun
+  GIT_REPO: github.com/stuttgart-things/kaeffken
+  IMAGE_REPO: scr.cd43.sthings-pve.labul.sva.de/kaeffken
 
 tasks:
   tests:
