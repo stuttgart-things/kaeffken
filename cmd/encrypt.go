@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/google/go-github/v62/github"
 	"github.com/stuttgart-things/kaeffken/models"
 	"github.com/stuttgart-things/kaeffken/modules"
 
@@ -21,6 +22,7 @@ var (
 	secretTemplates = make(map[string]string)
 	keyValues       = make(map[string]interface{})
 	variables       = make(map[string]interface{})
+	client          *github.Client
 )
 
 // encryptCmd represents the encrypt command
@@ -101,6 +103,24 @@ var encryptCmd = &cobra.Command{
 
 		// OUTPUT ENCRYPTED SECRET
 		modules.HandleOutput(outputFormat, destinationPath, encryptedSecret)
+
+		fmt.Println(gitRepository)
+
+		// GET GIT REFERENCE OBJECT
+		// ref, err := sthingsCli.GetReferenceObject(client, groupName, repositoryName, branchName, baseBranch)
+		// if err != nil {
+		// 	log.Fatalf("UNABLE TO GET/CREATE THE COMMIT REFERENCE: %s\n", err)
+		// }
+		// if ref == nil {
+		// 	log.Fatalf("NO ERROR WHERE RETURNED BUT THE REFERENCE IS NIL")
+		// }
+
+		// // CREATE A NEW GIT TREE
+		// gitTree, err := sthingsCli.GetGitTree(client, ref, files, groupName, repositoryName)
+		// if err != nil {
+		// 	log.Fatalf("UNABLE TO CREATE THE TREE BASED ON THE PROVIDED FILES: %s\n", err)
+		// }
+
 	},
 }
 
