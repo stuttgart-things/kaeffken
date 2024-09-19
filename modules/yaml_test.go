@@ -69,7 +69,7 @@ fluxAppDefaults:
 
 	// Use the readYAMLFile function to read and parse the temporary YAML file
 	var fluxDefaults FluxDefaults
-	fluxDefaults, err = ReadYAMLFile[FluxDefaults](tmpFile.Name())
+	fluxDefaults, err = ReadYAMLFileFromDisk[FluxDefaults](tmpFile.Name())
 	if err != nil {
 		t.Fatalf("Failed to read YAML file: %v", err)
 	}

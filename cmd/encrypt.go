@@ -106,20 +106,27 @@ var encryptCmd = &cobra.Command{
 
 		fmt.Println(gitRepository)
 
-		// GET GIT REFERENCE OBJECT
-		// ref, err := sthingsCli.GetReferenceObject(client, groupName, repositoryName, branchName, baseBranch)
-		// if err != nil {
-		// 	log.Fatalf("UNABLE TO GET/CREATE THE COMMIT REFERENCE: %s\n", err)
-		// }
-		// if ref == nil {
-		// 	log.Fatalf("NO ERROR WHERE RETURNED BUT THE REFERENCE IS NIL")
-		// }
+		// CREATE GITHUB CLIENT
+		client = github.NewClient(nil).WithAuthToken(token)
 
-		// // CREATE A NEW GIT TREE
-		// gitTree, err := sthingsCli.GetGitTree(client, ref, files, groupName, repositoryName)
-		// if err != nil {
-		// 	log.Fatalf("UNABLE TO CREATE THE TREE BASED ON THE PROVIDED FILES: %s\n", err)
-		// }
+		//GET GIT REFERENCE OBJECT
+		ref, err := sthingsCli.GetReferenceObject(client, gitOwner, gitRepo, "test-branch", "main")
+		if err != nil {
+			log.Fatalf("UNABLE TO GET/CREATE THE COMMIT REFERENCE: %s\n", err)
+		}
+		if ref == nil {
+			log.Fatalf("NO ERROR WHERE RETURNED BUT THE REFERENCE IS NIL")
+		}
+
+		files := []string{"/tmp/this.yaml:this.yaml"}
+
+		// CREATE A NEW GIT TREE
+		gitTree, err := sthingsCli.GetGitTree(client, ref, files, gitOwner, gitRepo)
+		if err != nil {
+			log.Fatalf("UNABLE TO CREATE THE TREE BASED ON THE PROVIDED FILES: %s\n", err)
+		}
+
+		sthingsCli.PushCommit(client, ref, gitTree, gitOwner, gitRepo, "kaeffken", "kaeffken@sthings.com", "test commit")
 
 	},
 }

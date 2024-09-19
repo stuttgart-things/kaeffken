@@ -5,7 +5,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"strings"
 
+	"github.com/google/go-github/v62/github"
 	"github.com/stuttgart-things/kaeffken/models"
 	"github.com/stuttgart-things/kaeffken/modules"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
@@ -24,12 +27,21 @@ var (
 
 			appKind, _ := cmd.LocalFlags().GetString("kind")
 			renderedTemplates := make(map[string]string)
+			outputFormat, _ := cmd.LocalFlags().GetString("output")
 
-			// outputFormat, _ := cmd.LocalFlags().GetString("output")
+			defaultsPath, _ := cmd.LocalFlags().GetString("defaults")
+			appDefaultsPath, _ := cmd.LocalFlags().GetString("appDefaults")
+			appsPath, _ := cmd.LocalFlags().GetString("apps")
+
+			fmt.Println(defaultsPath)
+			fmt.Println(appDefaultsPath)
+			fmt.Println(appsPath)
+
+			fmt.Println(outputFormat)
 
 			switch appKind {
 			case "flux":
-				renderedTemplates = RenderFlux()
+				renderedTemplates = RenderFlux(defaultsPath, appDefaultsPath, appsPath)
 			default:
 				log.Error("Unknown app kind: ", appKind)
 			}
@@ -40,44 +52,95 @@ var (
 	}
 )
 
-func RenderFlux() (renderedTemplates map[string]string) {
+func RenderFlux(defaultsPath, appDefaultsPath, appsPath string) (renderedTemplates map[string]string) {
+
+	var technologyDefaults string
+	var fluxAppDefaults string
+	var apps string
+
+	// CREATE GITHUB CLIENT
+	gitHubToken := os.Getenv("GITHUB_TOKEN")
+	client = github.NewClient(nil).WithAuthToken(gitHubToken)
 
 	renderedTemplates = make(map[string]string)
+
+	// profilePath := make(map[string]string)
+	// profilePath["pathFluxDefaults"] = "/home/patrick/projects/kaeffken/tests/flux-defaults.yaml"
+	// profilePath["pathFluxAppDefaults"] = "/home/patrick/projects/kaeffken/tests/app-defaults.yaml"
+	// profilePath["pathAppValues"] = "/home/patrick/projects/kaeffken/tests/apps.yaml"
+
+	// fluxValues := make(map[string]models.FluxDefaults)
+	// fluxValueKeyNames := []string{"fluxDefaults", "appDefaults", "appValues"}
+
+	// fluxValues["fluxDefaults"] = models.FluxDefaults
+	// fluxValues["appDefaults"] = "/home/patrick/projects/kaeffken/tests/apps.yaml"
+	// fluxValues["appValues"] = "/home/patrick/projects/kaeffken/tests/apps.yaml"
+
 	// appTemplatesFiles := make(map[string]string)
-
-	// gitHubToken := os.Getenv("GITHUB_TOKEN")
-
-	// GET APP TEMPLATE FILES FROM LOCAL FILES
-	pathFluxDefaults := "/home/patrick/projects/kaeffken/tests/flux-defaults.yaml"
-	pathFluxAppDefaults := "/home/patrick/projects/kaeffken/tests/app-defaults.yaml"
-	pathAppValues := "/home/patrick/projects/kaeffken/tests/apps.yaml"
 
 	// client := modules.CreateGithubClient(gitHubToken)
 	// fmt.Println(client)
 
-	owner, repo, branch, path, _ := modules.ParseGitHubURL("https://github.com/stuttgart-things/stuttgart-things.git@main:kaeffken/apps/flux/app-defaults.yaml")
-	fmt.Println(owner, repo, branch, path)
+	// owner, repo, branch, path, _ := modules.ParseGitHubURL("https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/app-defaults.yaml")
+	// fmt.Println(owner, repo, branch, path)
 
-	// fileContent := modules.GetFileContentFromFileInGitHubRepo(client, "stuttgart-things", "stuttgart-things", "main", "kaeffken/apps/flux/app-defaults.yaml")
-	// fmt.Println(fileContent)
+	// fileContent := modules.GetFileContentFromFileInGitHubRepo(client, "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/app-defaults.yaml")
+
+	if strings.Contains(defaultsPath, "@") {
+		technologyDefaults = modules.GetFileContentFromFileInGitHubRepo(client, defaultsPath)
+	} else {
+		// READ YAML FILE FROM FS
+		yamlFile, err := os.ReadFile(defaultsPath)
+		if err != nil {
+			log.Error("Error reading ", err)
+		}
+		technologyDefaults = string(yamlFile)
+	}
+
+	if strings.Contains(appDefaultsPath, "@") {
+		fluxAppDefaults = modules.GetFileContentFromFileInGitHubRepo(client, appDefaultsPath)
+	} else {
+		// READ YAML FILE FROM FS
+		yamlFile, err := os.ReadFile(defaultsPath)
+		if err != nil {
+			log.Error("Error reading ", err)
+		}
+		fluxAppDefaults = string(yamlFile)
+	}
+
+	if strings.Contains(appsPath, "@") {
+		apps = modules.GetFileContentFromFileInGitHubRepo(client, appsPath)
+	} else {
+		// READ YAML FILE FROM FS
+		yamlFile, err := os.ReadFile(defaultsPath)
+		if err != nil {
+			log.Error("Error reading ", err)
+		}
+		apps = string(yamlFile)
+	}
+
+	fmt.Println(technologyDefaults)
+	fmt.Println(fluxAppDefaults)
+	fmt.Println(apps)
 
 	// sthingsCli.GetFileContentFromGithubRepo
 
-	fluxDefaults, err := modules.ReadYAMLFile[models.FluxDefaults](pathFluxDefaults)
+	// READ FLUX DEFAULTS
+	fluxDefaults, err := modules.ReadYAMLFile[models.FluxDefaults](technologyDefaults)
 	if err != nil {
-		log.Error("Error reading ", pathFluxDefaults)
+		log.Error("Error reading ", err)
 	}
 
-	// Read app defaults
-	appDefaults, err := modules.ReadYAMLFile[models.AppDefaults](pathFluxAppDefaults)
+	// READ APP DEFAULTS
+	appDefaults, err := modules.ReadYAMLFile[models.AppDefaults](fluxAppDefaults)
 	if err != nil {
-		log.Error("Error reading ", pathFluxAppDefaults)
+		log.Error("Error reading ", err)
 	}
 
-	// Read app values
-	appValues, err := modules.ReadYAMLFile[models.Apps](pathAppValues)
+	// READ APP VALUES
+	appValues, err := modules.ReadYAMLFile[models.Apps](apps)
 	if err != nil {
-		log.Error("Error reading ", pathAppValues)
+		log.Error("Error reading ", err)
 	}
 
 	log.Info("FLUX DEFAULT: ", fluxDefaults)
@@ -141,4 +204,7 @@ func init() {
 	rootCmd.AddCommand(appsCmd)
 	appsCmd.Flags().String("kind", "flux", "app kind: flux|")
 	appsCmd.Flags().String("output", "stdout", "outputFormat stdout|file")
+	appsCmd.Flags().String("defaults", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/flux-defaults.yaml", "default values for technology")
+	appsCmd.Flags().String("appDefaults", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/app-defaults.yaml", "app default values")
+	appsCmd.Flags().String("apps", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/apps.yaml", "defined apps")
 }
