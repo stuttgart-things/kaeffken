@@ -28,7 +28,7 @@ var (
 			appKind, _ := cmd.LocalFlags().GetString("kind")
 			renderedTemplates := make(map[string]string)
 			outputFormat, _ := cmd.LocalFlags().GetString("output")
-
+			outputDir, _ := cmd.LocalFlags().GetString("outputDir")
 			defaultsPath, _ := cmd.LocalFlags().GetString("defaults")
 			appDefaultsPath, _ := cmd.LocalFlags().GetString("appDefaults")
 			appsPath, _ := cmd.LocalFlags().GetString("apps")
@@ -37,16 +37,15 @@ var (
 			fmt.Println(appDefaultsPath)
 			fmt.Println(appsPath)
 
-			fmt.Println(outputFormat)
-
 			switch appKind {
 			case "flux":
 				renderedTemplates = RenderFlux(defaultsPath, appDefaultsPath, appsPath)
 			default:
-				log.Error("Unknown app kind: ", appKind)
+				log.Error("UNKNOWN APP KIND: ", appKind)
 			}
 
-			modules.HandleRenderOutput(renderedTemplates, "file", "/tmp")
+			filesList := modules.HandleRenderOutput(renderedTemplates, outputFormat, outputDir, clusterPath)
+			log.Info("FILES WRITTEN: ", filesList)
 
 		},
 	}
@@ -63,28 +62,6 @@ func RenderFlux(defaultsPath, appDefaultsPath, appsPath string) (renderedTemplat
 	client = github.NewClient(nil).WithAuthToken(gitHubToken)
 
 	renderedTemplates = make(map[string]string)
-
-	// profilePath := make(map[string]string)
-	// profilePath["pathFluxDefaults"] = "/home/patrick/projects/kaeffken/tests/flux-defaults.yaml"
-	// profilePath["pathFluxAppDefaults"] = "/home/patrick/projects/kaeffken/tests/app-defaults.yaml"
-	// profilePath["pathAppValues"] = "/home/patrick/projects/kaeffken/tests/apps.yaml"
-
-	// fluxValues := make(map[string]models.FluxDefaults)
-	// fluxValueKeyNames := []string{"fluxDefaults", "appDefaults", "appValues"}
-
-	// fluxValues["fluxDefaults"] = models.FluxDefaults
-	// fluxValues["appDefaults"] = "/home/patrick/projects/kaeffken/tests/apps.yaml"
-	// fluxValues["appValues"] = "/home/patrick/projects/kaeffken/tests/apps.yaml"
-
-	// appTemplatesFiles := make(map[string]string)
-
-	// client := modules.CreateGithubClient(gitHubToken)
-	// fmt.Println(client)
-
-	// owner, repo, branch, path, _ := modules.ParseGitHubURL("https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/app-defaults.yaml")
-	// fmt.Println(owner, repo, branch, path)
-
-	// fileContent := modules.GetFileContentFromFileInGitHubRepo(client, "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/app-defaults.yaml")
 
 	if strings.Contains(defaultsPath, "@") {
 		technologyDefaults = modules.GetFileContentFromFileInGitHubRepo(client, defaultsPath)
@@ -191,7 +168,6 @@ func RenderFlux(defaultsPath, appDefaultsPath, appsPath string) (renderedTemplat
 
 			log.Info("TEMPLATE WAS RENDERED ", appkey)
 			renderedTemplates[appkey] = rendered
-			// fmt.Println(rendered)
 
 		} else {
 			log.Error("APP NOT FOUND! ", appkey)
@@ -204,6 +180,7 @@ func init() {
 	rootCmd.AddCommand(appsCmd)
 	appsCmd.Flags().String("kind", "flux", "app kind: flux|")
 	appsCmd.Flags().String("output", "stdout", "outputFormat stdout|file")
+	appsCmd.Flags().String("outputDir", "/tmp", "output directory")
 	appsCmd.Flags().String("defaults", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/flux-defaults.yaml", "default values for technology")
 	appsCmd.Flags().String("appDefaults", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/app-defaults.yaml", "app default values")
 	appsCmd.Flags().String("apps", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/apps.yaml", "defined apps")
