@@ -1,5 +1,14 @@
 # stuttgart-things/kaeffken
 
+<div align="center">
+  <p>
+    <img src="https://github.com/stuttgart-things/docs/blob/main/hugo/sthings-coffee.png" alt="sthings" width="450" />
+  </p>
+  <p>
+    <strong>[sˈθɪŋz]</strong>- using modularity to speed up parallel builds
+  </p>
+</div>
+
 gitops apps & cluster management cli
 
 <details><summary><b>APPS</b></summary>
