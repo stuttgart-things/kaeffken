@@ -10,8 +10,6 @@
   </p>
 </div>
 
-gitops apps & cluster management cli
-
 <details><summary><b>APPS</b></summary>
 
 ```bash
