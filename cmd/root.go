@@ -59,9 +59,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&gitRepo, "repo", "stuttgart-things", "repository name")
 	rootCmd.PersistentFlags().StringVar(&clusterName, "clusterName", "", "repository name")
 	rootCmd.PersistentFlags().StringVar(&clusterPath, "clusterPath", "", "repository name")
-
 	rootCmd.PersistentFlags().StringVar(&logFilePath, "log", "/tmp/kaeffken.log", "log file path")
-	// rootCmd.PersistentFlags().StringVar(&gitUser, "gitUser", "git/data/github:username", "git user")
 	rootCmd.PersistentFlags().StringVar(&gitBranch, "branch", "main", "git branch")
 	rootCmd.PersistentFlags().StringVar(&gitCommitID, "commitID", "", "git commit id")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

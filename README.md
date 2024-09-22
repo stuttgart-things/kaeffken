@@ -2,11 +2,14 @@
 
 gitops apps & cluster management cli
 
-<details><summary><b>DEPLOY</b></summary>
+<details><summary><b>APPS</b></summary>
 
 ```bash
-kaeffken --name [CLUSTERNAME]
-#kaeffken --name michigan --env labul
+kaeffken \
+--output file \
+--clusterPath=clusters/labul/test1 \
+--apps tests/apps.yaml
+--pr true
 ```
 
 </details>

@@ -32,21 +32,27 @@ var (
 			defaultsPath, _ := cmd.LocalFlags().GetString("defaults")
 			appDefaultsPath, _ := cmd.LocalFlags().GetString("appDefaults")
 			appsPath, _ := cmd.LocalFlags().GetString("apps")
+			createPullRequest, _ := cmd.LocalFlags().GetBool("pr")
 
-			fmt.Println(defaultsPath)
-			fmt.Println(appDefaultsPath)
-			fmt.Println(appsPath)
+			log.Info("DEFAULTS LOADED FROM: ", defaultsPath)
+			log.Info("APP-DEFAULTS LOADED FROM: ", appDefaultsPath)
+			log.Info("APPS DECLARED AT: ", appsPath)
 
 			switch appKind {
+
 			case "flux":
 				renderedTemplates = RenderFlux(defaultsPath, appDefaultsPath, appsPath)
 			default:
 				log.Error("UNKNOWN APP KIND: ", appKind)
 			}
 
+			// HANDLE OUTPUT
 			filesList := modules.HandleRenderOutput(renderedTemplates, outputFormat, outputDir, clusterPath)
-			log.Info("FILES WRITTEN: ", filesList)
 
+			// CREATE PULL REQUEST
+			if createPullRequest {
+				modules.CreateGitHubPullRequest(token, gitOwner, gitOwner, "kaeffken@sthings.com", gitRepo, "test-commit", filesList)
+			}
 		},
 	}
 )
@@ -69,7 +75,7 @@ func RenderFlux(defaultsPath, appDefaultsPath, appsPath string) (renderedTemplat
 		// READ YAML FILE FROM FS
 		yamlFile, err := os.ReadFile(defaultsPath)
 		if err != nil {
-			log.Error("Error reading ", err)
+			log.Error("ERROR READING ", err)
 		}
 		technologyDefaults = string(yamlFile)
 	}
@@ -78,9 +84,9 @@ func RenderFlux(defaultsPath, appDefaultsPath, appsPath string) (renderedTemplat
 		fluxAppDefaults = modules.GetFileContentFromFileInGitHubRepo(client, appDefaultsPath)
 	} else {
 		// READ YAML FILE FROM FS
-		yamlFile, err := os.ReadFile(defaultsPath)
+		yamlFile, err := os.ReadFile(appDefaultsPath)
 		if err != nil {
-			log.Error("Error reading ", err)
+			log.Error("ERROR READING ", err)
 		}
 		fluxAppDefaults = string(yamlFile)
 	}
@@ -89,9 +95,9 @@ func RenderFlux(defaultsPath, appDefaultsPath, appsPath string) (renderedTemplat
 		apps = modules.GetFileContentFromFileInGitHubRepo(client, appsPath)
 	} else {
 		// READ YAML FILE FROM FS
-		yamlFile, err := os.ReadFile(defaultsPath)
+		yamlFile, err := os.ReadFile(appsPath)
 		if err != nil {
-			log.Error("Error reading ", err)
+			log.Error("ERROR READING ", err)
 		}
 		apps = string(yamlFile)
 	}
@@ -105,19 +111,19 @@ func RenderFlux(defaultsPath, appDefaultsPath, appsPath string) (renderedTemplat
 	// READ FLUX DEFAULTS
 	fluxDefaults, err := modules.ReadYAMLFile[models.FluxDefaults](technologyDefaults)
 	if err != nil {
-		log.Error("Error reading ", err)
+		log.Error("ERROR READING ", err)
 	}
 
 	// READ APP DEFAULTS
 	appDefaults, err := modules.ReadYAMLFile[models.AppDefaults](fluxAppDefaults)
 	if err != nil {
-		log.Error("Error reading ", err)
+		log.Error("ERROR READING ", err)
 	}
 
 	// READ APP VALUES
 	appValues, err := modules.ReadYAMLFile[models.Apps](apps)
 	if err != nil {
-		log.Error("Error reading ", err)
+		log.Error("ERROR READING ", err)
 	}
 
 	log.Info("FLUX DEFAULT: ", fluxDefaults)
@@ -163,7 +169,7 @@ func RenderFlux(defaultsPath, appDefaultsPath, appsPath string) (renderedTemplat
 
 			rendered, err := modules.RenderTemplate(models.TemplateFluxKustomization, kustomization)
 			if err != nil {
-				log.Error("Error reading template ", err)
+				log.Error("ERROR READING TEMPLATE ", err)
 			}
 
 			log.Info("TEMPLATE WAS RENDERED ", appkey)
@@ -184,4 +190,5 @@ func init() {
 	appsCmd.Flags().String("defaults", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/flux-defaults.yaml", "default values for technology")
 	appsCmd.Flags().String("appDefaults", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/app-defaults.yaml", "app default values")
 	appsCmd.Flags().String("apps", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/apps.yaml", "defined apps")
+	appsCmd.Flags().Bool("pr", false, "create pull request")
 }
