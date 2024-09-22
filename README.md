@@ -2,10 +2,10 @@
 
 <div align="center">
   <p>
-    <img src="https://github.com/stuttgart-things/docs/blob/main/hugo/sthings-coffee.png" alt="sthings" width="450" />
+    <img src="https://github.com/stuttgart-things/docs/blob/main/hugo/sthings-coffee.png" alt="sthings" width="600" />
   </p>
   <p>
-    <strong>[sˈθɪŋz]</strong>- using modularity to speed up parallel builds
+    <strong>[ˈkɛfkən]</strong>- using modularity to speed up parallel builds
   </p>
 </div>
 
