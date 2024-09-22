@@ -2,10 +2,11 @@
 
 <div align="center">
   <p>
-    <img src="https://github.com/stuttgart-things/docs/blob/main/hugo/sthings-coffee.png" alt="sthings" width="600" />
+    <img src="https://github.com/stuttgart-things/docs/blob/main/hugo/sthings-coffee.png" alt="sthings" width="350" />
   </p>
   <p>
-    <strong>[ˈkɛfkən]</strong>- using modularity to speed up parallel builds
+    <strong>[ˈkɛfkən]</strong>- gitops apps & cluster management cli
+
   </p>
 </div>
 
