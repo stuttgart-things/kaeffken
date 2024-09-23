@@ -38,12 +38,16 @@ type AppDefaults struct {
 // Define the Variables type
 type Variables map[string]interface{}
 
+// Define the Secrets type
+type Secrets map[string]interface{}
+
 // Define the FluxComponent struct
 type FluxComponent struct {
 	Repository string              `yaml:"repository"`
 	Revision   string              `yaml:"revision"`
 	Path       string              `yaml:"path"`
 	Variables  map[string]Variable `yaml:"variables"`
+	Secrets    map[string]Secret   `yaml:"secrets"`
 	Spec       FluxSpec            `yaml:"spec"`
 }
 
@@ -51,6 +55,7 @@ type FluxApp struct {
 	Name      string              `yaml:"name"`
 	Spec      Spec                `yaml:"spec"`
 	Variables map[string]Variable `yaml:"variables"`
+	Secrets   map[string]Secret   `yaml:"secrets"`
 }
 
 // Define the FluxDefaults struct with dynamic keys
@@ -83,7 +88,12 @@ spec:
     substitute:
 {{- range $key, $value := .Spec.PostBuild.Substitute }}
       {{$key}}: {{$value}}
-{{- end }}
+{{- end }}{{ if .Spec.PostBuild.SubstituteFrom }}
+    substituteFrom:
+{{- range $key, $value := .Spec.PostBuild.SubstituteFrom }}
+      - kind: {{ $key }}
+	name: {{ $value }}
+{{- end }}{{- end }}
 `
 
 // Define the Metadata struct
@@ -97,9 +107,15 @@ type Variable struct {
 	Value string `yaml:"value"`
 }
 
+type Secret struct {
+	Name string   `yaml:"name"`
+	Data []string `yaml:"secretData"`
+}
+
 // Define the PostBuild struct
 type PostBuild struct {
-	Substitute map[string]interface{} `yaml:"substitute"`
+	Substitute     map[string]interface{} `yaml:"substitute"`
+	SubstituteFrom map[string]interface{} `yaml:"substituteFrom"`
 }
 
 // Define the Spec struct

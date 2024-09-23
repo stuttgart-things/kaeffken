@@ -20,6 +20,15 @@ kaeffken \
 --pr true
 ```
 
+```bash
+kaeffken \
+--output stdout \
+--apps /home/sthings/projects/stuttgart-things/kaeffken/apps/flux/apps.yaml \
+--appDefaults /home/sthings/projects/stuttgart-things/kaeffken/apps/flux/app-defaults.yaml \
+--defaults /home/sthings/projects/stuttgart-things/kaeffken/apps/flux/flux-defaults.yaml
+```
+
+
 </details>
 
 <details><summary><b>ENCRYPT FILE</b></summary>
