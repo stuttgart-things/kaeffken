@@ -1,0 +1,11 @@
+---
+defaultBaseImage: ghcr.io/stuttgart-things/sthings-alpine:1.23
+
+builds:
+  - id: kaeffken
+    dir: .
+    main: main.go
+    ldflags:
+      - -s -w -X github.com/stuttgart-things/kaeffken/cmd.version={{.Git.Tag}}
+      - -s -w -X github.com/stuttgart-things/kaeffken/cmd.date={{.Date}}
+      - -s -w -X github.com/stuttgart-things/kaeffken/cmd.commit={{.Git.ShortCommit}}
