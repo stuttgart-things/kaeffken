@@ -38,6 +38,8 @@ func Execute(defCmd string) {
 	var cmdFound bool
 	cmd := rootCmd.Commands()
 
+	PrintBanner()
+
 	for _, a := range cmd {
 		for _, b := range os.Args[1:] {
 			if a.Name() == b {
