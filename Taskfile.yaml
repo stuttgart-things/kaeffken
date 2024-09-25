@@ -6,7 +6,6 @@ vars:
     sh: pwd | grep -o "[^/]*$"
   DATE:
     sh: date +"%y.%m%d.%H%M"
-  MODULE: github.com/{{ .REPOSITORY_NAME }}/{{ .PROJECT_NAME }}
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
   BRANCH:
@@ -52,6 +51,16 @@ tasks:
         git push origin ${BRANCH_NAME}
       - git branch
       - git branch --set-upstream-to=origin/main ${BRANCH_NAME}
+
+  pr:
+    desc: Create pull request into main
+    cmds:
+      - task: commit
+      - gh pr create -t "{{ .BRANCH }}" -b "{{ .BRANCH }} branch into main"
+      - sleep 20s
+      - gh pr checks $(gh pr list | grep "^[^#;]" | awk '{print $1}') --watch
+      - gh pr merge $(gh pr list | grep "^[^#;]" | awk '{print $1}') --auto --rebase --delete-branch
+      - git checkout main && git pull
 
   run:
     desc: Run
