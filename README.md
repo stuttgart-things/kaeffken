@@ -50,6 +50,15 @@ kaeffken encrypt \
 --output stdout
 ```
 
+```bash
+kaeffken encrypt \
+--source tests/secret.yaml \
+--output file \
+--pr true \
+--destination /tmp \
+--clusterPath=clusters/labul/test1
+```
+
 </details>
 
 <details><summary><b>RENDER (BUILTIN) TEMPLATE AND ENCRYPT FILE</b></summary>

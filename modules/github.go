@@ -58,13 +58,13 @@ func ParseGitHubURL(url string) (owner, repo, branch, path string, err error) {
 	return owner, repo, branch, path, nil
 }
 
-func CreateGitHubPullRequest(token, gitOwner, author, authormail, gitRepo, comment string, files []string) {
+func CreateGitHubPullRequest(token, gitOwner, author, authormail, gitRepo, branchName, comment string, files []string) {
 
 	// CREATE GITHUB CLIENT
 	client := github.NewClient(nil).WithAuthToken(token)
 
 	//GET GIT REFERENCE OBJECT
-	ref, err := sthingsCli.GetReferenceObject(client, gitOwner, gitRepo, "test-branch", "main")
+	ref, err := sthingsCli.GetReferenceObject(client, gitOwner, gitRepo, branchName, "main")
 	if err != nil {
 		log.Fatalf("UNABLE TO GET/CREATE THE COMMIT REFERENCE: %s\n", err)
 	}
@@ -78,6 +78,8 @@ func CreateGitHubPullRequest(token, gitOwner, author, authormail, gitRepo, comme
 		log.Fatalf("UNABLE TO CREATE THE TREE BASED ON THE PROVIDED FILES: %s\n", err)
 	}
 
-	sthingsCli.PushCommit(client, ref, gitTree, gitOwner, gitRepo, author, authormail, comment)
-
+	err = sthingsCli.PushCommit(client, ref, gitTree, gitOwner, gitRepo, author, authormail, comment)
+	if err != nil {
+		log.Fatalf("UNABLE TO CREATE THE PUSH TO GIT: %s\n", err)
+	}
 }

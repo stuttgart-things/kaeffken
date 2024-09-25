@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/google/go-github/v62/github"
 	"github.com/stuttgart-things/kaeffken/models"
 	"github.com/stuttgart-things/kaeffken/modules"
 
@@ -22,7 +21,6 @@ var (
 	secretTemplates = make(map[string]string)
 	keyValues       = make(map[string]interface{})
 	variables       = make(map[string]interface{})
-	client          *github.Client
 )
 
 // encryptCmd represents the encrypt command
@@ -45,7 +43,14 @@ var encryptCmd = &cobra.Command{
 		metaName, _ := cmd.LocalFlags().GetString("name")
 		metaNamespace, _ := cmd.LocalFlags().GetString("namespace")
 		templateValues, _ := cmd.Flags().GetStringSlice("values")
+		branchName, _ := cmd.LocalFlags().GetString("branch")
 		createPullRequest, _ := cmd.LocalFlags().GetBool("pr")
+
+		if branchName == "" {
+			log.Warn("BRANCH NAME EMPTY")
+			branchName = "kaeffken-secret-" + timestamp
+			log.Info("BRANCH NAME GENERATED: ", branchName)
+		}
 
 		// CHECK IF TEMPLATE IS SET
 		if template != "" {
@@ -105,31 +110,13 @@ var encryptCmd = &cobra.Command{
 
 		encryptedSecrets[metaName] = encryptedSecret
 
-		// // OUTPUT ENCRYPTED SECRET
-		// modules.HandleOutput(outputFormat, destinationPath, encryptedSecret)
-
 		// HANDLE OUTPUT
 		filesList := modules.HandleRenderOutput(encryptedSecrets, outputFormat, destinationPath, clusterPath)
 
-		// fmt.Println(gitRepository)
-
-		// // CREATE GITHUB CLIENT
-		// client = github.NewClient(nil).WithAuthToken(token)
-
-		// //GET GIT REFERENCE OBJECT
-		// ref, err := sthingsCli.GetReferenceObject(client, gitOwner, gitRepo, "test-branch", "main")
-		// if err != nil {
-		// 	log.Fatalf("UNABLE TO GET/CREATE THE COMMIT REFERENCE: %s\n", err)
-		// }
-		// if ref == nil {
-		// 	log.Fatalf("NO ERROR WHERE RETURNED BUT THE REFERENCE IS NIL")
-		// }
-
-		// files := []string{"/tmp/this.yaml:this.yaml"}
-
+		fmt.Println(filesList)
 		// CREATE PULL REQUEST
 		if createPullRequest && outputFormat != "stdout" {
-			modules.CreateGitHubPullRequest(token, gitOwner, gitOwner, "kaeffken@sthings.com", gitRepo, "test-commit", filesList)
+			modules.CreateGitHubPullRequest(token, gitOwner, gitOwner, "kaeffken@sthings.com", gitRepo, "test-commit", branchName, filesList)
 		}
 
 	},
@@ -146,4 +133,5 @@ func init() {
 	encryptCmd.Flags().String("name", "secret", "meta name")
 	encryptCmd.Flags().String("namespace", "default", "meta namespace")
 	encryptCmd.Flags().Bool("pr", false, "create pull request")
+	encryptCmd.Flags().String("branch", "", "name of to be created branch")
 }
