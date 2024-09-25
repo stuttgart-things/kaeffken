@@ -4,8 +4,6 @@ Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/stuttgart-things/kaeffken/modules"
 
 	"github.com/spf13/cobra"
@@ -18,10 +16,9 @@ var (
 		Long:  `render apps configs for different app kinds`,
 		Run: func(cmd *cobra.Command, args []string) {
 
-			fmt.Println(token)
+			renderedTemplates := make(map[string]string)
 
 			appKind, _ := cmd.LocalFlags().GetString("kind")
-			renderedTemplates := make(map[string]string)
 			outputFormat, _ := cmd.LocalFlags().GetString("output")
 			outputDir, _ := cmd.LocalFlags().GetString("outputDir")
 			defaultsPath, _ := cmd.LocalFlags().GetString("defaults")

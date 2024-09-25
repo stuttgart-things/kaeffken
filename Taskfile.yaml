@@ -53,11 +53,19 @@ tasks:
       - git branch
       - git branch --set-upstream-to=origin/main ${BRANCH_NAME}
 
+
+  run:
+    desc: Run
+    deps: [build]
+    cmds:
+      - "$GOPATH/bin/{{ .PROJECT_NAME }}"
+
   build:
-    desc: Build code
+    desc: Install
+    deps: [lint, test]
     cmds:
       - go mod tidy
-      - go install
+      - go install -ldflags="-X {{ .MODULE }}/cmd.version={{ .VERSION }} -X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
 
   lint:
     desc: Lint code

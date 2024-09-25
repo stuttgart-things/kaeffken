@@ -1,0 +1,9 @@
+run:
+  timeout: 10m
+
+issues:
+  exclude-files:
+    # - main_test.go
+
+  exclude-dirs:
+    - tests

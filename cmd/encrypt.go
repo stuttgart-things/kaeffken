@@ -34,6 +34,7 @@ var encryptCmd = &cobra.Command{
 
 		// DEFAULTS
 		secretTemplates["k8s"] = models.K8sSecret
+		encryptedSecrets := make(map[string]string)
 
 		// FLAGS
 		source, _ := cmd.LocalFlags().GetString("source")
@@ -44,6 +45,7 @@ var encryptCmd = &cobra.Command{
 		metaName, _ := cmd.LocalFlags().GetString("name")
 		metaNamespace, _ := cmd.LocalFlags().GetString("namespace")
 		templateValues, _ := cmd.Flags().GetStringSlice("values")
+		createPullRequest, _ := cmd.LocalFlags().GetBool("pr")
 
 		// CHECK IF TEMPLATE IS SET
 		if template != "" {
@@ -101,32 +103,34 @@ var encryptCmd = &cobra.Command{
 		// ENCRYPT SECRET WITH SOPS
 		encryptedSecret := sthingsCli.EncryptStore(ageKey, sourceFile)
 
-		// OUTPUT ENCRYPTED SECRET
-		modules.HandleOutput(outputFormat, destinationPath, encryptedSecret)
+		encryptedSecrets[metaName] = encryptedSecret
 
-		fmt.Println(gitRepository)
+		// // OUTPUT ENCRYPTED SECRET
+		// modules.HandleOutput(outputFormat, destinationPath, encryptedSecret)
 
-		// CREATE GITHUB CLIENT
-		client = github.NewClient(nil).WithAuthToken(token)
+		// HANDLE OUTPUT
+		filesList := modules.HandleRenderOutput(encryptedSecrets, outputFormat, destinationPath, clusterPath)
 
-		//GET GIT REFERENCE OBJECT
-		ref, err := sthingsCli.GetReferenceObject(client, gitOwner, gitRepo, "test-branch", "main")
-		if err != nil {
-			log.Fatalf("UNABLE TO GET/CREATE THE COMMIT REFERENCE: %s\n", err)
+		// fmt.Println(gitRepository)
+
+		// // CREATE GITHUB CLIENT
+		// client = github.NewClient(nil).WithAuthToken(token)
+
+		// //GET GIT REFERENCE OBJECT
+		// ref, err := sthingsCli.GetReferenceObject(client, gitOwner, gitRepo, "test-branch", "main")
+		// if err != nil {
+		// 	log.Fatalf("UNABLE TO GET/CREATE THE COMMIT REFERENCE: %s\n", err)
+		// }
+		// if ref == nil {
+		// 	log.Fatalf("NO ERROR WHERE RETURNED BUT THE REFERENCE IS NIL")
+		// }
+
+		// files := []string{"/tmp/this.yaml:this.yaml"}
+
+		// CREATE PULL REQUEST
+		if createPullRequest && outputFormat != "stdout" {
+			modules.CreateGitHubPullRequest(token, gitOwner, gitOwner, "kaeffken@sthings.com", gitRepo, "test-commit", filesList)
 		}
-		if ref == nil {
-			log.Fatalf("NO ERROR WHERE RETURNED BUT THE REFERENCE IS NIL")
-		}
-
-		files := []string{"/tmp/this.yaml:this.yaml"}
-
-		// CREATE A NEW GIT TREE
-		gitTree, err := sthingsCli.GetGitTree(client, ref, files, gitOwner, gitRepo)
-		if err != nil {
-			log.Fatalf("UNABLE TO CREATE THE TREE BASED ON THE PROVIDED FILES: %s\n", err)
-		}
-
-		sthingsCli.PushCommit(client, ref, gitTree, gitOwner, gitRepo, "kaeffken", "kaeffken@sthings.com", "test commit")
 
 	},
 }
@@ -141,4 +145,5 @@ func init() {
 	encryptCmd.Flags().StringSlice("values", []string{}, "templating values")
 	encryptCmd.Flags().String("name", "secret", "meta name")
 	encryptCmd.Flags().String("namespace", "default", "meta namespace")
+	encryptCmd.Flags().Bool("pr", false, "create pull request")
 }
