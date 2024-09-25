@@ -25,10 +25,17 @@ var (
 			appDefaultsPath, _ := cmd.LocalFlags().GetString("appDefaults")
 			appsPath, _ := cmd.LocalFlags().GetString("apps")
 			createPullRequest, _ := cmd.LocalFlags().GetBool("pr")
+			branchName, _ := cmd.LocalFlags().GetString("branch")
 
 			log.Info("DEFAULTS LOADED FROM: ", defaultsPath)
 			log.Info("APP-DEFAULTS LOADED FROM: ", appDefaultsPath)
 			log.Info("APPS DECLARED AT: ", appsPath)
+
+			if branchName == "" {
+				log.Warn("BRANCH NAME EMPTY")
+				branchName = "kaeffken-apps-" + timestamp
+				log.Info("BRANCH NAME GENERATED: ", branchName)
+			}
 
 			switch appKind {
 
@@ -43,7 +50,7 @@ var (
 
 			// CREATE PULL REQUEST
 			if createPullRequest && outputFormat != "stdout" {
-				modules.CreateGitHubPullRequest(token, gitOwner, gitOwner, "kaeffken@sthings.com", gitRepo, "test-commit", filesList)
+				modules.CreateGitHubPullRequest(token, gitOwner, gitOwner, "kaeffken@sthings.com", gitRepo, "test-commit", branchName, filesList)
 			}
 		},
 	}
@@ -57,5 +64,6 @@ func init() {
 	appsCmd.Flags().String("defaults", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/flux-defaults.yaml", "default values for technology")
 	appsCmd.Flags().String("appDefaults", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/app-defaults.yaml", "app default values")
 	appsCmd.Flags().String("apps", "https://github.com/stuttgart-things/stuttgart-things@main:kaeffken/apps/flux/apps.yaml", "defined apps")
+	appsCmd.Flags().String("branch", "", "name of to be created branch")
 	appsCmd.Flags().Bool("pr", false, "create pull request")
 }

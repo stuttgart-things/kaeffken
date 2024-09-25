@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"time"
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
@@ -23,6 +24,8 @@ var (
 	gitRepo       string
 	gitCommitID   string
 	log           = sthingsBase.StdOutFileLogger("/tmp/machineShop.log", "2006-01-02 15:04:05", 50, 3, 28)
+	currentTime   = time.Now()
+	timestamp     = currentTime.Format("06-02-01-15-04-05")
 )
 
 var rootCmd = &cobra.Command{

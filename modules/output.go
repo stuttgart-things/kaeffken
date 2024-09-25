@@ -42,7 +42,6 @@ func HandleRenderOutput(renderedTemplates map[string]string, outputFormat, local
 		if outputFormat == "stdout" {
 			fmt.Println(renderedTemplate)
 		} else {
-			// sthingsBase.CreateNestedDirectoryStructure(destinationPath, 0600)
 			log.Info("output file written to ", localDestinationPath+"/"+appKey+".yaml")
 			sthingsBase.WriteDataToFile(localDestinationPath+"/"+appKey+".yaml", renderedTemplate)
 
