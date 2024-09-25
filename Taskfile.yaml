@@ -15,8 +15,23 @@ vars:
     sh: git describe --tags --abbrev=0
   GIT_REPO: github.com/stuttgart-things/kaeffken
   IMAGE_REPO: scr.cd43.sthings-pve.labul.sva.de/kaeffken
+  ORGA_NAME: stuttgart-things
+  MODULE: github.com/{{ .ORGA_NAME }}/{{ .PROJECT_NAME }}
+  DATE:
+    sh: date -Ih
+  GIT_COMMIT:
+    sh: git log -n 1 --format=%h
+  VERSION: 0.0.1-mvp
 
 tasks:
+  build-ko:
+    desc: Build image w/ KO
+    deps: [lint, test, commit]
+    env:
+      KO_DOCKER_REPO: ghcr.io/{{ .ORGA_NAME }}/{{ .PROJECT_NAME }}
+    cmds:
+      - ko build {{ .MODULE }} --image-label org.opencontainers.image.source=https://github.com/{{ .ORGA_NAME }}/{{ .PROJECT_NAME }} --push
+
   tests:
     desc: Built cli tests
     deps:
