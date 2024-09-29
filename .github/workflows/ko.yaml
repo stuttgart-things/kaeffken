@@ -6,7 +6,7 @@ on:
 jobs:
   publish:
     name: Publish
-    runs-on: docker-group
+    runs-on: docker
     steps:
       - uses: actions/setup-go@v4
         with:
