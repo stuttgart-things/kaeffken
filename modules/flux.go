@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
 	"github.com/google/go-github/v62/github"
 	"github.com/stuttgart-things/kaeffken/models"
@@ -18,6 +19,7 @@ var (
 	technologyDefaults string
 	fluxAppDefaults    string
 	apps               string
+	sopsAgeKey         = os.Getenv("SOPS_AGE_KEY")
 )
 
 func RenderFluxApplication(defaultsPath, appDefaultsPath, appsPath string) (renderedTemplates map[string]string) {
@@ -146,35 +148,40 @@ func RenderFluxApplication(defaultsPath, appDefaultsPath, appsPath string) (rend
 			renderedTemplates[appkey] = rendered
 
 			// SECRET RENDERING
-			secretVariables := make(map[string]interface{})
 
-			fmt.Println("MERGED SECRETS: ", secrets)
-			for key, secret := range secrets {
-				secretVariables["metaName"] = key
-				secretVariables["metaNamespace"] = appDefaults.FluxKustomization.CR.Namespace
+			if len(secrets) != 0 {
 
-				keyValues := make(map[string]interface{})
+				secretVariables := make(map[string]interface{})
 
-				for _, secretValue := range secret.Data {
-					fmt.Println("SECRET: ", secretValue)
-					parts := strings.Split(secretValue, ":")
-					if len(parts) != 2 {
-						fmt.Println("Invalid secret format: ", secretValue)
-						continue
+				fmt.Println("MERGED SECRETS: ", secrets)
+				for key, secret := range secrets {
+					secretVariables["metaName"] = key
+					secretVariables["metaNamespace"] = appDefaults.FluxKustomization.CR.Namespace
+
+					keyValues := make(map[string]interface{})
+
+					for _, secretValue := range secret.Data {
+						fmt.Println("SECRET: ", secretValue)
+						parts := strings.Split(secretValue, ":")
+						if len(parts) != 2 {
+							fmt.Println("Invalid secret format: ", secretValue)
+							continue
+						}
+						keyValues[parts[0]] = parts[1]
 					}
-					keyValues[parts[0]] = parts[1]
+					secretVariables["Data"] = keyValues
 				}
-				secretVariables["Data"] = keyValues
+
+				renderedSecret, err := sthingsBase.RenderTemplateInline(models.K8sSecret, "missingkey=error", "{{", "}}", secretVariables)
+				if err != nil {
+					log.Error("ERROR WHILE TEMPLATING", err)
+				}
+
+				// ENCRYPT SECRET WITH SOPS
+				encryptedSecret := sthingsCli.EncryptStore(sopsAgeKey, string(renderedSecret))
+				renderedTemplates[appkey+"-secret"] = encryptedSecret
+
 			}
-
-			renderedSecret, err := sthingsBase.RenderTemplateInline(models.K8sSecret, "missingkey=error", "{{", "}}", secretVariables)
-			if err != nil {
-				log.Error("ERROR WHILE TEMPLATING", err)
-			}
-
-			fmt.Println(string(renderedSecret))
-
-			// ENCRIPT SECRET
 
 		} else {
 			log.Error("APP NOT FOUND! ", appkey)
