@@ -4,6 +4,7 @@ Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 package modules
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -143,6 +144,35 @@ func RenderFluxApplication(defaultsPath, appDefaultsPath, appsPath string) (rend
 
 			log.Info("TEMPLATE WAS RENDERED ", appkey)
 			renderedTemplates[appkey] = rendered
+
+			// SECRET RENDERING
+			secretVariables := make(map[string]interface{})
+
+			fmt.Println("MERGED SECRETS: ", secrets)
+			for key, secret := range secrets {
+				secretVariables["metaName"] = key
+				secretVariables["metaNamespace"] = appDefaults.FluxKustomization.CR.Namespace
+
+				keyValues := make(map[string]interface{})
+
+				for _, secretValue := range secret.Data {
+					fmt.Println("SECRET: ", secretValue)
+					parts := strings.Split(secretValue, ":")
+					if len(parts) != 2 {
+						fmt.Println("Invalid secret format: ", secretValue)
+						continue
+					}
+					keyValues[parts[0]] = parts[1]
+				}
+				secretVariables["Data"] = keyValues
+			}
+
+			renderedSecret, err := sthingsBase.RenderTemplateInline(models.K8sSecret, "missingkey=error", "{{", "}}", secretVariables)
+			if err != nil {
+				log.Error("ERROR WHILE TEMPLATING", err)
+			}
+
+			fmt.Println(string(renderedSecret))
 
 		} else {
 			log.Error("APP NOT FOUND! ", appkey)
