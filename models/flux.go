@@ -1,3 +1,7 @@
+/*
+Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
+*/
+
 package models
 
 // Define the CR struct
@@ -105,11 +109,6 @@ type Metadata struct {
 type Variable struct {
 	Name  string `yaml:"name"`
 	Value string `yaml:"value"`
-}
-
-type Secret struct {
-	Name string   `yaml:"name"`
-	Data []string `yaml:"secretData"`
 }
 
 // Define the PostBuild struct
