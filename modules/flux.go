@@ -174,6 +174,8 @@ func RenderFluxApplication(defaultsPath, appDefaultsPath, appsPath string) (rend
 
 			fmt.Println(string(renderedSecret))
 
+			// ENCRIPT SECRET
+
 		} else {
 			log.Error("APP NOT FOUND! ", appkey)
 		}
