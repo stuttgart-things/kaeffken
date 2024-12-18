@@ -1,0 +1,15 @@
+---
+- prompt: "your fave color?"
+  name: go
+  options:
+    - "blue"
+    - "red"
+    - "green"
+    - "yellow"
+
+- prompt: "Whats your name?"
+  kind: ask
+  name: name
+  type: string
+  minLength: 3
+  maxLength: 20

@@ -1,0 +1,31 @@
+---
+- prompt: "What is your favorite food?"
+  name: food
+  kind: function
+  default_function: getDefaultFavoriteFood
+  default_params:
+    spiceLevel: "medium"
+  minLength: 3
+  maxLength: 20
+
+- prompt: "What is your preferred drink?"
+  name: drink
+  kind: function
+  default_function: getDefaultDrink
+  default_params:
+    temperature: "cold"
+  minLength: 3
+  maxLength: 20
+
+- prompt: "Do you like Go?"
+  name: go
+  options:
+    - "Yes"
+    - "No"
+
+- prompt: "Do you have any pets?"
+  name: pets
+  options:
+    - "Yes"
+    - "No"
+  type: boolean
