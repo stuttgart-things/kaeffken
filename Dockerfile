@@ -1,4 +1,4 @@
-FROM golang:1.21.4 AS builder
+FROM golang:1.23.4 AS builder
 LABEL maintainer="Patrick Hermann patrick.hermann@sva.de"
 LABEL org.opencontainers.image.source https://github.com/stuttgart-things/kaeffken
 
