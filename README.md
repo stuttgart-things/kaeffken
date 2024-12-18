@@ -10,6 +10,14 @@
   </p>
 </div>
 
+<details><summary><b>CREATE</b></summary>
+
+```bash
+kaeffken create --survey=true --questions "tests/questions1.yaml,tests/questions2.yaml"
+```
+
+</details>
+
 <details><summary><b>APPS</b></summary>
 
 ```bash
@@ -27,7 +35,6 @@ kaeffken \
 --appDefaults /home/sthings/projects/stuttgart-things/kaeffken/apps/flux/app-defaults.yaml \
 --defaults /home/sthings/projects/stuttgart-things/kaeffken/apps/flux/flux-defaults.yaml
 ```
-
 
 </details>
 
