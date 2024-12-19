@@ -23,9 +23,25 @@
     - "Yes"
     - "No"
 
-- prompt: "Do you have any pets?"
-  name: pets
+- prompt: "Count of vms?"
+  name: vmCount
   options:
-    - "Yes"
-    - "No"
-  type: boolean
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+
+- prompt: "S3 Endpoint?"
+  name: s3Endpoint
+  options:
+    - "artifacts.automation.sthings-vsphere.labul.sva.de"
+
+- prompt: "VM memory?"
+  name: vmMemory
+  options:
+    - "4"
+    - "6"
+    - "8"
+    - "12"
+    - "16"

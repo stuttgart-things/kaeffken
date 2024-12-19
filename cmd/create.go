@@ -29,6 +29,17 @@ var (
 		"curly":  TemplateBracket{"{{", "}}", `\{\{(.*?)\}\}`},
 		"square": TemplateBracket{"[[", "]]", `\[\[(.*?)\]\]`},
 	}
+	metaQuestions = map[string]modules.InputQuestion{
+		"Project name?": {
+			Question:  "Project name?",
+			Default:   "",
+			MinLength: 3,
+			MaxLength: 18,
+			Id:        "projectName",
+			Type:      "string",
+		},
+	}
+	metaAnswers map[string]interface{}
 )
 
 // createCmd represents the create command
@@ -88,6 +99,15 @@ var createCmd = &cobra.Command{
 		switch bool(runSurvey) {
 		// IF INTERACTIVE - RUN THE SURVEY
 		case true:
+
+			//ASK QUESTIONS AND GET THE ANSWERS
+			metaAnswers, err := modules.AskInputQuestions(metaQuestions)
+			if err != nil {
+				log.Fatalf("Error asking questions: %v", err)
+			}
+
+			fmt.Println(metaAnswers)
+
 			err = survey.Run()
 			if err != nil {
 				log.Fatalf("Error running survey: %v", err)
@@ -100,52 +120,33 @@ var createCmd = &cobra.Command{
 
 			log.Info("ALL VALUES: ", allValues)
 
-			renderedTemplate, err := sthingsBase.RenderTemplateInline(allTemplates[0], renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
-			if err != nil {
-				fmt.Println(err)
+			// LOOP OVER ALL TEMPLATES AND RENDER THEM
+			for _, template := range allTemplates {
+
+				renderedTemplate, err := sthingsBase.RenderTemplateInline(template, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+				if err != nil {
+					fmt.Println(err)
+				}
+				fmt.Println(string(renderedTemplate))
+
 			}
 
-			fmt.Println(string(renderedTemplate))
+			filesList := []string{"/tmp/bla:blaa"}
 
+			fmt.Println(token)
+			fmt.Println(gitOwner)
+			fmt.Println(gitOwner)
+			fmt.Println(gitRepo)
+
+			modules.CreateBranchOnGitHub(token, gitOwner, gitOwner, "kaeffken@sthings.com", gitRepo, "test-commit", metaAnswers["projectName"].(string), filesList)
 		// IF NON-INTERACTIVE - USE THE DEFAULTS
 		case false:
 			allValues = defaults
 		}
 
-		// Example questions for input
-		questions := map[string]modules.InputQuestion{
-			"Do you like Go?": {
-				Question:  "Do you like Go?",
-				Default:   "Yes",
-				MinLength: 2,
-				MaxLength: 3,
-				Type:      "boolean",
-			},
-			"Enter your name": {
-				Question:  "Enter your name",
-				Default:   "",
-				MinLength: 3,
-				MaxLength: 20,
-				Type:      "string",
-			},
-			"What's your age?": {
-				Question:  "What's your age?",
-				Default:   "25",
-				MinLength: 1,
-				MaxLength: 3,
-				Type:      "int",
-			},
-		}
-
-		// Ask questions and get the answers
-		answers, err := modules.AskInputQuestions(questions)
-		if err != nil {
-			log.Fatalf("Error asking questions: %v", err)
-		}
-
 		// Output the answers
 		fmt.Println("\nYour answers:")
-		for question, answer := range answers {
+		for question, answer := range metaAnswers {
 			// Convert interface{} to string for output
 			switch v := answer.(type) {
 			case string:
@@ -160,8 +161,8 @@ var createCmd = &cobra.Command{
 		}
 
 		questions2 := map[string]interface{}{
-			"Do you like Go?":             []string{"Yes", "No"},
-			"What's your favorite color?": []string{"Red", "Blue", "Green", "Yellow"},
+			"Commit Files to branch?": []string{"Yes", "No"},
+			"Create Pull Reuest?":     []string{"Yes", "No"},
 		}
 
 		// Run the prompts and get the answers

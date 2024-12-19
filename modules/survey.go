@@ -164,13 +164,38 @@ type InputQuestion struct {
 	MinLength int
 	MaxLength int
 	Type      string
+	Id        string
 }
+
+// questions := map[string]modules.InputQuestion{
+// 	"Do you like Go?": {
+// 		Question:  "Do you like Go?",
+// 		Default:   "Yes",
+// 		MinLength: 2,
+// 		MaxLength: 3,
+// 		Type:      "boolean",
+// 	},
+// 	"Enter your name": {
+// 		Question:  "Enter your name",
+// 		Default:   "",
+// 		MinLength: 3,
+// 		MaxLength: 20,
+// 		Type:      "string",
+// 	},
+// 	"What's your age?": {
+// 		Question:  "What's your age?",
+// 		Default:   "25",
+// 		MinLength: 1,
+// 		MaxLength: 3,
+// 		Type:      "int",
+// 	},
+// }
 
 // askInputQuestions asks questions and returns a map with answers
 func AskInputQuestions(questions map[string]InputQuestion) (map[string]interface{}, error) {
 	answers := make(map[string]interface{}) // To hold question names and their answers
 
-	for questionName, iq := range questions {
+	for _, iq := range questions {
 		var field huh.Field
 		var answer string
 
@@ -207,9 +232,9 @@ func AskInputQuestions(questions map[string]InputQuestion) (map[string]interface
 		switch iq.Type {
 		case "boolean":
 			if answer == "Yes" {
-				answers[questionName] = true
+				answers[iq.Id] = true
 			} else if answer == "No" {
-				answers[questionName] = false
+				answers[iq.Id] = false
 			} else {
 				return nil, fmt.Errorf("Invalid answer for boolean question: %s", answer)
 			}
@@ -218,14 +243,19 @@ func AskInputQuestions(questions map[string]InputQuestion) (map[string]interface
 			if err != nil {
 				return nil, fmt.Errorf("Invalid answer for int question: %s", answer)
 			}
-			answers[questionName] = intValue
+			answers[iq.Id] = intValue
 		default:
-			answers[questionName] = answer // Default to string
+			answers[iq.Id] = answer // Default to string
 		}
 	}
 
 	return answers, nil
 }
+
+// questions := map[string]interface{}{
+// 	"Do you like Go?":             []string{"Yes", "No"},
+// 	"What's your favorite color?": []string{"Red", "Blue", "Green", "Yellow"},
+// }
 
 func AskMultipleChoiceQuestions(questions map[string]interface{}) (map[string]interface{}, error) {
 	// Create a map to store the answers

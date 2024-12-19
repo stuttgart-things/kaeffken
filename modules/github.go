@@ -58,7 +58,7 @@ func ParseGitHubURL(url string) (owner, repo, branch, path string, err error) {
 	return owner, repo, branch, path, nil
 }
 
-func CreateGitHubPullRequest(token, gitOwner, author, authormail, gitRepo, branchName, comment string, files []string) {
+func CreateBranchOnGitHub(token, gitOwner, author, authormail, gitRepo, branchName, comment string, files []string) {
 
 	// CREATE GITHUB CLIENT
 	client := github.NewClient(nil).WithAuthToken(token)

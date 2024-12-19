@@ -116,7 +116,7 @@ var encryptCmd = &cobra.Command{
 		fmt.Println(filesList)
 		// CREATE PULL REQUEST
 		if createPullRequest && outputFormat != "stdout" {
-			modules.CreateGitHubPullRequest(token, gitOwner, gitOwner, "kaeffken@sthings.com", gitRepo, "test-commit", branchName, filesList)
+			modules.CreateBranchOnGitHub(token, gitOwner, gitOwner, "kaeffken@sthings.com", gitRepo, "test-commit", branchName, filesList)
 		}
 
 	},
