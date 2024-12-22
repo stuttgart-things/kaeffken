@@ -252,53 +252,64 @@ func AskInputQuestions(questions map[string]InputQuestion) (map[string]interface
 	return answers, nil
 }
 
-// questions := map[string]interface{}{
-// 	"Do you like Go?":             []string{"Yes", "No"},
-// 	"What's your favorite color?": []string{"Red", "Blue", "Green", "Yellow"},
+// commitQuestions = map[string]map[string]interface{}{
+// 	"commit": {
+// 		"name":    "Commit rendered files to branch?",
+// 		"options": []string{"true", "false"},
+// 	},
+// 	"pr": {
+// 		"name":    "Create a pull request?",
+// 		"options": []string{"true", "false"},
+// 	},
 // }
 
-func AskMultipleChoiceQuestions(questions map[string]interface{}) (map[string]interface{}, error) {
+func AskMultipleChoiceQuestions(questions map[string]map[string]interface{}) (map[string]interface{}, error) {
 	// Create a map to store the answers
 	answers := make(map[string]interface{})
 
 	// Iterate over the questions map
-	for questionName, option := range questions {
-		var field huh.Field
-		var answer interface{} // Use an interface{} to handle dynamic types
-
-		// Check if the option is a slice (which means it's a set of possible values/options)
-		switch opts := option.(type) {
-		case []string:
-			// If options are provided, create a select field
-			options := make([]huh.Option[string], len(opts))
-			for i, opt := range opts {
-				options[i] = huh.NewOption(opt, opt)
-			}
-
-			// Create a select input, where answer is of type string
-			var selectedOption string
-			field = huh.NewSelect[string]().
-				Title(questionName). // No colon here
-				Options(options...).
-				Value(&selectedOption)
-
-			// Store the selected option
-			answer = selectedOption
-
-		default:
-			return nil, fmt.Errorf("unsupported question type for %s", questionName)
+	for id, questionDetails := range questions {
+		// Extract question name and options
+		questionName, ok := questionDetails["name"].(string)
+		if !ok {
+			return nil, fmt.Errorf("invalid question name for ID %s", id)
 		}
+
+		options, ok := questionDetails["options"].([]string)
+		if !ok {
+			return nil, fmt.Errorf("invalid options for question ID %s", id)
+		}
+
+		var field huh.Field
+		var selectedOption string // Ensure this is scoped per iteration
+		var answer string
+
+		// Create a select field for the options
+		selectOptions := make([]huh.Option[string], len(options))
+		for i, opt := range options {
+			selectOptions[i] = huh.NewOption(opt, opt)
+		}
+
+		// Create a select input, where answer is of type string
+		field = huh.NewSelect[string]().
+			Title(questionName). // Display the question name
+			Options(selectOptions...).
+			Value(&selectedOption)
 
 		// Create the group and add the field
 		group := huh.NewGroup(field)
+
 		// Run the survey
 		err := huh.NewForm(group).Run()
 		if err != nil {
-			return nil, fmt.Errorf("error running survey for %s: %v", questionName, err)
+			return nil, fmt.Errorf("ERROR RUNNING SURVEY FOR QUESTION ID %s: %v", id, err)
 		}
 
-		// Store the user's answer in the answers map
-		answers[questionName] = answer
+		// Store the selected option
+		answer = selectedOption
+
+		// Store the user's answer in the answers map using the question ID
+		answers[id] = answer
 	}
 
 	return answers, nil

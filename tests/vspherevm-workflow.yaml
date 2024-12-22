@@ -1,0 +1,15 @@
+---
+gitRepo: stuttgart-things
+gitOwner: stuttgart-things
+gitBranch: "{{ .technology }}-{{ .projectName }}"
+rootFolder: terraform
+subFolder: "{{ .projectName }}"
+technology: terraform
+
+questions:
+  - tests/questions1.yaml
+  - tests/questions2.yaml
+
+templates:
+  - "tests/vspherevm.tf.tpl:{{ .projectName }}.tf"
+  - "tests/state.tf.tpl:state/state.tf"

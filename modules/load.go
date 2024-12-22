@@ -6,7 +6,10 @@ package modules
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
+
+	"gopkg.in/yaml.v3"
 
 	billy "github.com/go-git/go-billy/v5"
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
@@ -99,4 +102,20 @@ type Clusters struct {
 type Cluster struct {
 	Cloud string   `mapstructure:"cloud"`
 	Ips   []string `mapstructure:"ips"`
+}
+
+// READYAML READS AND PARSES A YAML FILE INTO A PROVIDED STRUCT
+func ReadYAML(filename string, out interface{}) error {
+	file, err := os.Open(filename)
+	if err != nil {
+		return fmt.Errorf("could not open file: %v", err)
+	}
+	defer file.Close()
+
+	decoder := yaml.NewDecoder(file)
+	if err := decoder.Decode(out); err != nil {
+		return fmt.Errorf("could not decode YAML: %v", err)
+	}
+
+	return nil
 }
