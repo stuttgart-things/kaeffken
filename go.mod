@@ -7,6 +7,7 @@ require (
 	github.com/fatih/color v1.17.0
 	github.com/go-git/go-billy/v5 v5.5.0
 	github.com/google/go-github/v62 v62.0.0
+	github.com/google/go-github/v67 v67.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.9.0
 	github.com/stuttgart-things/sthingsBase v0.1.41
@@ -14,6 +15,7 @@ require (
 	go.hein.dev/go-version v0.1.0
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 	gopkg.in/yaml.v2 v2.4.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -211,6 +213,5 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
