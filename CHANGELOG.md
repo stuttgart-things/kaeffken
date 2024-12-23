@@ -1,3 +1,10 @@
+## [0.2.8](https://github.com/stuttgart-things/kaeffken/compare/v0.2.7...v0.2.8) (2024-12-23)
+
+
+### Bug Fixes
+
+* updated goreleaser ([351507d](https://github.com/stuttgart-things/kaeffken/commit/351507d895ed20d4beb44541ae84807c1838bb8a))
+
 ## [0.2.7](https://github.com/stuttgart-things/kaeffken/compare/v0.2.6...v0.2.7) (2024-12-23)
 
 
