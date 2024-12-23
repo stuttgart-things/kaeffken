@@ -82,4 +82,20 @@ func CreateBranchOnGitHub(token, gitOwner, author, authormail, gitRepo, branchNa
 	if err != nil {
 		log.Fatalf("UNABLE TO CREATE THE PUSH TO GIT: %s\n", err)
 	}
+
+}
+
+func CreatePullRequestOnGitHub(token, prSubject, prRepoOwner, sourceOwner, commitBranch, prRepo, sourceRepo, repoBranch, baseBranch, prDescription string, labels []string) {
+
+	// CREATE GITHUB CLIENT
+	client := github.NewClient(nil).WithAuthToken(token)
+
+	// CREATE PULL REQUEST
+	err, pullRequestID := sthingsCli.CreatePullRequest(client, prSubject, prRepoOwner, sourceOwner, commitBranch, prRepo, sourceRepo, repoBranch, baseBranch, prDescription, labels)
+	if err != nil {
+		log.Fatalf("UNABLE TO CREATE THE PULL REQUEST: %s\n", err)
+	} else {
+		log.Info("PULL-REQUEST CREATED W/ ID: ", pullRequestID)
+	}
+
 }

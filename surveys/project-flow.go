@@ -39,9 +39,9 @@ type Config struct {
 	Technology string   `yaml:"technology"`
 }
 
-func RunGitHubBranchingFlow(pojectName string, config Config) map[string]interface{} {
+func RunGitHubBranchingFlow(config Config, projectName string) map[string]interface{} {
 
-	configMap := StructToMap(config, pojectName)
+	configMap := ConfigToMap(config, projectName)
 
 	branchDefault, err := sthingsBase.RenderTemplateInline(config.GitBranch, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, configMap)
 	if err != nil {
@@ -80,13 +80,11 @@ func RunGitHubBranchingFlow(pojectName string, config Config) map[string]interfa
 		log.Fatalf("ERROR ASKING META QUESTIONS: %v", err)
 	}
 
-	fmt.Println(githubPRAnswers)
-
 	return githubPRAnswers
 }
 
-// StructToMap converts a Config struct to a map[string]interface{}
-func StructToMap(cfg Config, projectName string) map[string]interface{} {
+// ConfigToMap converts a Config struct to a map[string]interface{}
+func ConfigToMap(cfg Config, projectName string) map[string]interface{} {
 	return map[string]interface{}{
 		"gitRepo":     cfg.GitRepo,
 		"gitOwner":    cfg.GitOwner,
