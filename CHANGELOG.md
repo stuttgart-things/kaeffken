@@ -1,3 +1,10 @@
+## [0.2.9](https://github.com/stuttgart-things/kaeffken/compare/v0.2.8...v0.2.9) (2024-12-23)
+
+
+### Bug Fixes
+
+* updated releaser ([36b54eb](https://github.com/stuttgart-things/kaeffken/commit/36b54ebd2c9a3f88081bdb47d59936769f8fac3d))
+
 ## [0.2.8](https://github.com/stuttgart-things/kaeffken/compare/v0.2.7...v0.2.8) (2024-12-23)
 
 
