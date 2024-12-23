@@ -1,18 +1,18 @@
----
-name: Dispatch Ko
-on:
-  workflow_dispatch:
+# ---
+# name: Dispatch Ko
+# on:
+#   workflow_dispatch:
 
-jobs:
-  publish:
-    name: Publish
-    runs-on: docker
-    steps:
-      - uses: actions/setup-go@v5
-        with:
-          go-version: 1.23.1
+# jobs:
+#   publish:
+#     name: Publish
+#     runs-on: docker
+#     steps:
+#       - uses: actions/setup-go@v5
+#         with:
+#           go-version: 1.23.1
 
-      - uses: actions/checkout@v4
+#       - uses: actions/checkout@v4
 
-      - uses: ko-build/setup-ko@v0.7
-      - run: ko build
+#       - uses: ko-build/setup-ko@v0.7
+#       - run: ko build
