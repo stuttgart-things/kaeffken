@@ -7,7 +7,7 @@ require (
 	github.com/fatih/color v1.17.0
 	github.com/go-git/go-billy/v5 v5.6.0
 	github.com/google/go-github/v62 v62.0.0
-	github.com/google/go-github/v67 v67.0.0
+	github.com/google/go-github/v68 v68.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	github.com/stuttgart-things/sthingsBase v0.1.41
