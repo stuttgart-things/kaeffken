@@ -162,3 +162,11 @@ tasks:
     env:
       KO_DOCKER_REPO: "{{ .IMAGE_REPO }}"
       KO_REPO: "{{ .GIT_REPO }}"
+
+  release:
+    desc: Release
+    cmds:
+      - git checkout main && git pull
+      - task: commit
+      - npx semantic-release --dry-run
+      - npx semantic-release --debug --no-ci
