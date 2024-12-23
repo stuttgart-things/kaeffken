@@ -1,3 +1,10 @@
+## [0.2.7](https://github.com/stuttgart-things/kaeffken/compare/v0.2.6...v0.2.7) (2024-12-23)
+
+
+### Bug Fixes
+
+* test ([8e5a56f](https://github.com/stuttgart-things/kaeffken/commit/8e5a56f750364b03680e5c57eef6cf797e72d358))
+
 ## [0.2.6](https://github.com/stuttgart-things/kaeffken/compare/v0.2.5...v0.2.6) (2024-12-23)
 
 
