@@ -4,7 +4,7 @@ go 1.23.1
 
 require (
 	github.com/charmbracelet/huh v0.6.0
-	github.com/fatih/color v1.17.0
+	github.com/fatih/color v1.18.0
 	github.com/go-git/go-billy/v5 v5.6.0
 	github.com/google/go-github/v62 v62.0.0
 	github.com/google/go-github/v67 v67.0.0
