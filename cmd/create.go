@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	homerun "github.com/stuttgart-things/homerun-library"
 	"github.com/stuttgart-things/kaeffken/modules"
 	"github.com/stuttgart-things/kaeffken/surveys"
 
@@ -35,6 +36,7 @@ var (
 	allTemplateData []TemplateData
 	allQuestions    []*modules.Question
 	files2Commit    []string
+	homerunToken    = os.Getenv("HOMERUN_TOKEN")
 	githubPRAnswers = make(map[string]interface{})
 	bracketFormat   = "curly"
 	allValues       = make(map[string]interface{})
@@ -60,6 +62,11 @@ var createCmd = &cobra.Command{
 		projectName, _ := cmd.LocalFlags().GetString("project")
 		tmpDir, _ := cmd.LocalFlags().GetString("tmp")
 		outputDir, _ := cmd.LocalFlags().GetString("output")
+		homerunAddr, _ := cmd.LocalFlags().GetString("homerun")
+
+		if homerunToken == "" {
+			log.Warn("ERROR: HOMERUN_TOKEN ENVIRONMENT VARIABLE IS NOT SET")
+		}
 
 		// SET DEFAULTS
 		if outputDir == "" {
@@ -165,21 +172,6 @@ var createCmd = &cobra.Command{
 
 			log.Info("ALL VALUES: ", allValues)
 
-			// fmt.Println(commitAnswers)
-			// commit := sthingsBase.ConvertStringToBoolean(commitAnswers["commit"].(string))
-			// fmt.Println(commit)
-			// if commit {
-			// 	fmt.Println("Committing files to branch")
-			// 	// filesList := []string{"/tmp/bla:blaa"}
-			// 	fmt.Println(token)
-			// 	fmt.Println(gitOwner)
-			// 	fmt.Println(gitOwner)
-			// 	fmt.Println(gitRepo)
-			// 	//
-			// } else {
-			// 	fmt.Println("Not committing files to branch")
-			// }
-
 		// IF NON-INTERACTIVE - USE THE DEFAULTS
 		case false:
 			allValues = defaults
@@ -268,6 +260,39 @@ var createCmd = &cobra.Command{
 		prDescription := "PR DESCRIPTION"
 
 		modules.CreatePullRequestOnGitHub(token, prSubject, gitOwner, gitOwner, commitBranch, gitRepo, gitRepo, repoBranch, baseBranch, prDescription, labels)
+
+		// SEND NOTIFICATION TO HOMERUN
+		if homerunToken != "" {
+
+			message := homerun.Message{
+				Title:           "kaeffken",
+				Message:         "Memory usage is high",
+				Severity:        "INFO",
+				Author:          author,
+				Timestamp:       time.Now().UTC().Format(time.RFC3339), // Generate current timestamp
+				System:          "terraform",
+				Tags:            "terraform,kaeffken",
+				AssigneeAddress: authorMail,
+				AssigneeName:    author,
+				Artifacts:       "Admin",
+				Url:             "Admin",
+			}
+
+			err, respCode := modules.SendMessageToHomerun(homerunAddr, homerunToken, message)
+			if err != nil {
+				log.Error("ERROR SENDING MESSAGE:", err)
+			}
+
+			if respCode != "200 OK" {
+				log.Error("UNEXPECTED RESPONSE CODE:", err)
+			} else {
+				log.Info("NOTIFICATION SENT TO HOMERUN")
+			}
+
+		} else {
+			log.Warn("ERROR: HOMERUN_TOKEN ENVIRONMENT VARIABLE IS NOT SET")
+		}
+
 	},
 }
 
@@ -279,6 +304,7 @@ func init() {
 	createCmd.Flags().String("profile", "tests/vspherevm-workflow.yaml", "workflow profile")
 	createCmd.Flags().String("project", "unset", "project name")
 	createCmd.Flags().String("output", "", "output directory")
+	createCmd.Flags().String("homerun", "https://homerun.homerun-dev.sthings-vsphere.labul.sva.de/generic", "homerun address")
 	createCmd.Flags().String("tmp", "/tmp/kaeffken", "tmp directory")
 	createCmd.Flags().String("mail", "kaeffken@sthings.com", "author mail")
 	createCmd.Flags().String("author", "kaeffken", "author name")
