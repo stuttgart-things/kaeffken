@@ -74,8 +74,7 @@ var createCmd = &cobra.Command{
 		}
 
 		if projectName == "unset" && runSurvey {
-			projectName = "test-project"
-
+			// ASK FOR PROJECT NAME
 			metaQuestions := map[string]modules.InputQuestion{
 				"Project name?": {
 					Question:  "Project name?",
@@ -242,6 +241,8 @@ var createCmd = &cobra.Command{
 			// USE DEFAULTS FROM PROFILE
 			githubPRAnswers = surveys.ConfigToMap(gitConfig, "test-project")
 		}
+
+		log.Info("GITHUB PR ANSWERS: ", githubPRAnswers)
 
 		// SET COMMIT MESSAGE
 		allValues["commitMessage"] = projectName
