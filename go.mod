@@ -9,6 +9,7 @@ require (
 	github.com/google/go-github/v62 v62.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
+	github.com/stuttgart-things/homerun-library v0.0.0-20241203091353-87840452d0ba
 	github.com/stuttgart-things/sthingsBase v0.1.41
 	github.com/stuttgart-things/sthingsCli v0.1.124
 	go.hein.dev/go-version v0.1.0
@@ -17,6 +18,9 @@ require (
 )
 
 require (
+	atomicgo.dev/cursor v0.2.0 // indirect
+	atomicgo.dev/keyboard v0.2.9 // indirect
+	atomicgo.dev/schedule v0.1.0 // indirect
 	cloud.google.com/go v0.115.0 // indirect
 	cloud.google.com/go/auth v0.6.0 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.2 // indirect
@@ -76,6 +80,7 @@ require (
 	github.com/charmbracelet/x/exp/strings v0.0.0-20240722160745-212f7b056ed0 // indirect
 	github.com/charmbracelet/x/term v0.2.0 // indirect
 	github.com/cloudflare/circl v1.3.9 // indirect
+	github.com/containerd/console v1.0.3 // indirect
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.5 // indirect
@@ -108,6 +113,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.5 // indirect
+	github.com/gookit/color v1.5.4 // indirect
 	github.com/goware/prefixer v0.0.0-20160118172347-395022866408 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
@@ -132,6 +138,7 @@ require (
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/kyokomi/emoji/v2 v2.2.11 // indirect
 	github.com/lib/pq v1.10.9 // indirect
+	github.com/lithammer/fuzzysearch v1.1.8 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -158,6 +165,7 @@ require (
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
+	github.com/pterm/pterm v0.12.79 // indirect
 	github.com/redis/go-redis/v9 v9.6.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rs/xid v1.5.0 // indirect
@@ -183,6 +191,7 @@ require (
 	github.com/urfave/cli v1.22.15 // indirect
 	github.com/urfave/cli/v2 v2.24.3 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
+	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.52.0 // indirect
