@@ -1,3 +1,10 @@
+## [0.2.10](https://github.com/stuttgart-things/kaeffken/compare/v0.2.9...v0.2.10) (2024-12-24)
+
+
+### Bug Fixes
+
+* removed tag task ([4fd5c58](https://github.com/stuttgart-things/kaeffken/commit/4fd5c58b791e4861687b1db069952e7baca6f73f))
+
 ## [0.2.9](https://github.com/stuttgart-things/kaeffken/compare/v0.2.8...v0.2.9) (2024-12-23)
 
 
