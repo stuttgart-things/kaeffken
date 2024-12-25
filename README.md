@@ -81,11 +81,15 @@ kaeffken encrypt \
 
 </details>
 
+## INSTALL
 
+<details><summary><b>INSTALL (LINUX)</b></summary>
+
+</details>
 
 ## DEV
 
-<details><summary><b>BRANCH</b></summary>
+<details><summary><b>BRANCH BRANCH</b></summary>
 
 ```bash
 task branch
@@ -103,7 +107,7 @@ task run
 
 </details>
 
-<details><summary><b>PULL REQUEST</b></summary>
+<details><summary><b>CREATE/MERGE PULL REQUEST</b></summary>
 
 ```bash
 task pr
@@ -111,7 +115,7 @@ task pr
 
 </details>
 
-<details><summary><b>RELEASE</b></summary>
+<details><summary><b>RELEASE VERSIONED ARTIFACTS</b></summary>
 
 ```bash
 task release
