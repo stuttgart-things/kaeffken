@@ -49,17 +49,28 @@ var defaultFunctions = map[string]func(params map[string]interface{}) string{
 // LOAD QUESTIONS FROM YAML FILE
 func LoadQuestionFile(filename string) ([]*Question, error) {
 	var questions []*Question
+
+	// READ THE YAML FILE
 	data, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	err = yaml.Unmarshal(data, &questions)
-	if err != nil {
+	// ATTEMPT TO UNMARSHAL AS A LIST DIRECTLY (FOR YAML WITHOUT `PREQUESTIONS` KEY)
+	if err := yaml.Unmarshal(data, &questions); err == nil {
+		return questions, nil
+	}
+
+	// IF UNMARSHALING DIRECTLY FAILS, UNMARSHAL WITH THE `PREQUESTIONS` KEY
+	var wrapper struct {
+		PreQuestions []*Question `yaml:"preQuestions"`
+	}
+	if err := yaml.Unmarshal(data, &wrapper); err != nil {
 		return nil, err
 	}
 
-	return questions, nil
+	// Return questions from the wrapper
+	return wrapper.PreQuestions, nil
 }
 
 // BUILD THE SURVEY FUNCTION WITH THE NEW RANDOM SETUP

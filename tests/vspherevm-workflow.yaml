@@ -6,10 +6,28 @@ rootFolder: terraform
 subFolder: "{{ .projectName }}"
 technology: terraform
 
+preQuestions:
+  - prompt: "Project name?"
+    kind: ask
+    name: projectName
+    type: string
+    minLength: 3
+    maxLength: 20
+  - prompt: "Env name"
+    name: envName
+    options:
+      - "labul"
+      - "labda"
+
+# values:
+#   - vmName: {{ .projectName }}
+#   - commitaMessage: "Initial commit for {{ projectName }}"
+
 questions:
-  - tests/questions1.yaml
+  - tests/vm-general.yaml
   - tests/questions2.yaml
+  - tests/{{ .envName }}.yaml
 
 templates:
-  - "tests/vspherevm.tf.tpl:{{ .projectName }}.tf"
+  - "/home/sthings/projects/stuttgart-things/terraform/vsphere-vm.tf.tpl:{{ .projectName }}.tf"
   - "tests/state.tf.tpl:state/state.tf"

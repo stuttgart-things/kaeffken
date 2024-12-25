@@ -1,0 +1,60 @@
+---
+- prompt: "Count of vms?"
+  name: vmCount
+  options:
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+
+- prompt: "VM Memory?"
+  name: vmMemory
+  options:
+    - "4"
+    - "6"
+    - "8"
+    - "12"
+    - "16"
+
+- prompt: "VM Disk?"
+  name: vmDisk
+  options:
+    - "32G"
+    - "64G"
+    - "96G"
+    - "128G"
+    - "256G"
+
+
+# .vmName
+
+# - prompt: "What is your favorite food?"
+#   name: food
+#   kind: function
+#   default_function: getDefaultFavoriteFood
+#   default_params:
+#     spiceLevel: "medium"
+#   minLength: 3
+#   maxLength: 20
+
+# - prompt: "What is your preferred drink?"
+#   name: drink
+#   kind: function
+#   default_function: getDefaultDrink
+#   default_params:
+#     temperature: "cold"
+#   minLength: 3
+#   maxLength: 20
+
+# - prompt: "Do you like Go?"
+#   name: go
+#   options:
+#     - "Yes"
+#     - "No"
+
+
+# - prompt: "S3 Endpoint?"
+#   name: s3Endpoint
+#   options:
+#     - "artifacts.automation.sthings-vsphere.labul.sva.de"

@@ -10,6 +10,8 @@
   </p>
 </div>
 
+## COMMANDS
+
 <details><summary><b>CREATE</b></summary>
 
 ```bash
@@ -78,6 +80,39 @@ kaeffken encrypt \
 ```
 
 </details>
+
+
+
+## DEV
+
+<details><summary><b>BRANCH</b></summary>
+
+```bash
+task branch
+```
+
+</details>
+
+Add Features, fix, ...
+
+<details><summary><b>LINT, TEST, BUILD, RUN</b></summary>
+
+```bash
+task run
+```
+
+</details>
+
+<details><summary><b>PULL REQUEST</b></summary>
+
+```bash
+task pr
+```
+
+</details>
+
+
+
 
 ## AUTHOR
 
