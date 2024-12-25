@@ -1,3 +1,10 @@
+## [0.2.11](https://github.com/stuttgart-things/kaeffken/compare/v0.2.10...v0.2.11) (2024-12-25)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/fatih/color to v1.18.0 ([c05e81b](https://github.com/stuttgart-things/kaeffken/commit/c05e81b1cfda53b3af32c9978ebdf4ac15c7eea5))
+
 ## [0.2.10](https://github.com/stuttgart-things/kaeffken/compare/v0.2.9...v0.2.10) (2024-12-24)
 
 
