@@ -1,0 +1,7 @@
+---
+- prompt: "Network name?"
+  name: networkName
+  options:
+    - "1"
+    - "2"
+    - "3"

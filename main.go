@@ -6,6 +6,6 @@ package main
 import cmd "github.com/stuttgart-things/kaeffken/cmd"
 
 func main() {
-	defCmd := "apps"
+	defCmd := "version"
 	cmd.Execute(defCmd)
 }

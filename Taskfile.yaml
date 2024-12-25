@@ -11,7 +11,8 @@ vars:
   BRANCH:
     sh: if [ $(git rev-parse --abbrev-ref HEAD) != "main" ]; then echo $(git rev-parse --abbrev-ref HEAD); else echo main ; fi
   VERSION:
-    sh: git describe --tags --abbrev=0
+    sh: |
+      [ "$(git branch --show-current)" != "main" ] && echo "previewPost-$(git describe --tags --abbrev=0)" || echo $(git describe --tags --abbrev=0)
   GIT_REPO: github.com/stuttgart-things/kaeffken
   IMAGE_REPO: scr.cd43.sthings-pve.labul.sva.de/kaeffken
   ORGA_NAME: stuttgart-things
@@ -20,7 +21,6 @@ vars:
     sh: date -Ih
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
-  VERSION: 0.0.1-mvp
 
 tasks:
   build-ko:
@@ -88,15 +88,15 @@ tasks:
       - go mod tidy
       - cmd: go test ./... -v
 
-  run:
-    desc: Build code
-    deps:
-      - lint
-      - test
-    cmds:
-      - go mod tidy
-      - cmd: go install -ldflags="-X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.version={{ .VERSION }}-{{ .BRANCH }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
-      - cmd: "{{ .PROJECT_NAME }}"
+  # run:
+  #   desc: Build code
+  #   deps:
+  #     - lint
+  #     - test
+  #   cmds:
+  #     - go mod tidy
+  #     - cmd: go install -ldflags="-X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.version={{ .VERSION }}-{{ .BRANCH }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
+  #     - cmd: "{{ .PROJECT_NAME }}"
 
   commit:
     desc: Commit + push code into branch

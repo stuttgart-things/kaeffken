@@ -59,7 +59,6 @@ var createCmd = &cobra.Command{
 		profile, _ := cmd.LocalFlags().GetString("profile")
 		author, _ := cmd.LocalFlags().GetString("author")
 		authorMail, _ := cmd.LocalFlags().GetString("mail")
-		projectName, _ := cmd.LocalFlags().GetString("project")
 		tmpDir, _ := cmd.LocalFlags().GetString("tmp")
 		outputDir, _ := cmd.LocalFlags().GetString("output")
 		homerunAddr, _ := cmd.LocalFlags().GetString("homerun")
@@ -73,29 +72,29 @@ var createCmd = &cobra.Command{
 			outputDir = tmpDir + "/" + time.Now().Format("20060102_150405")
 		}
 
-		if projectName == "unset" && runSurvey {
-			// ASK FOR PROJECT NAME
-			metaQuestions := map[string]modules.InputQuestion{
-				"Project name?": {
-					Question:  "Project name?",
-					Default:   "",
-					MinLength: 3,
-					MaxLength: 18,
-					Id:        "projectName",
-					Type:      "string",
-				},
-			}
+		// if projectName == "unset" && runSurvey {
+		// 	// ASK FOR PROJECT NAME
+		// 	metaQuestions := map[string]modules.InputQuestion{
+		// 		"Project name?": {
+		// 			Question:  "Project name?",
+		// 			Default:   "",
+		// 			MinLength: 3,
+		// 			MaxLength: 18,
+		// 			Id:        "projectName",
+		// 			Type:      "string",
+		// 		},
+		// 	}
 
-			projectAnswers, err := modules.AskInputQuestions(metaQuestions)
-			if err != nil {
-				log.Fatalf("ERROR ASKING META QUESTIONS: %v", err)
-			}
+		// 	projectAnswers, err := modules.AskInputQuestions(metaQuestions)
+		// 	if err != nil {
+		// 		log.Fatalf("ERROR ASKING META QUESTIONS: %v", err)
+		// 	}
 
-			projectName = projectAnswers["projectName"].(string)
-		}
+		// 	projectName = projectAnswers["projectName"].(string)
+		// }
 
-		allValues["projectName"] = projectName
-		fmt.Println("ALLL", allValues)
+		// allValues["projectName"] = projectName
+		// fmt.Println("ALLL", allValues)
 
 		// READ GIT PROFILE
 		gitConfig := surveys.ReadGitProfile(profile)
@@ -106,9 +105,55 @@ var createCmd = &cobra.Command{
 		log.Info("DEFAULT GITHUB-OWNER: ", gitConfig.GitOwner)
 		log.Info("DEFAULT ROOTFOLDER: ", gitConfig.RootFolder)
 
+		// LOAD AND ASK PRE QUESTIONS
+		preQuestions, _ := modules.LoadQuestionFile(profile)
+		if len(preQuestions) > 0 {
+			log.Info("PRE-QUESTIONS FOUND")
+		} else {
+			log.Info("NO PRE-QUESTIONS FOUND")
+		}
+
+		// GET PRE-SURVEY AND DEFAULTS
+		preSurvey, preSurveyValues, err := modules.BuildSurvey(preQuestions)
+		if err != nil {
+			log.Fatalf("ERROR BUILDING SURVEY: %v", err)
+		}
+
+		// SET PRE-SURVEY VALUES TO ALL VALUES
+		allValues = preSurveyValues
+
+		if runSurvey {
+			// SET ANWERS TO ALL VALUES
+			err = preSurvey.Run()
+			if err != nil {
+				log.Fatalf("ERROR RUNNING SURVEY: %v", err)
+			}
+
+			// SET ANWERS TO ALL VALUES
+			for _, question := range preQuestions {
+				allValues[question.Name] = question.Default
+			}
+
+		}
+
 		// LOAD ALL QUESTION FILES
 		for _, questionFile := range gitConfig.Questions {
-			questions, _ := modules.LoadQuestionFile(questionFile)
+
+			// RENDER QUESTION FILE
+			renderedQuestionFilePath, err := sthingsBase.RenderTemplateInline(questionFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+			if err != nil {
+				log.Error("ERROR RENDERING QUESTION FILE: ", err)
+			}
+			log.Info("LOADING QUESTION FILE: ", string(renderedQuestionFilePath))
+
+			questions, _ := modules.LoadQuestionFile(string(renderedQuestionFilePath))
+
+			if len(questions) > 0 {
+				log.Info("LOADED QUESTIONS FROM FILE: ", len(questions))
+			} else {
+				log.Warn("NO QUESTIONS FOUND IN FILE: ", string(renderedQuestionFilePath))
+			}
+
 			allQuestions = append(allQuestions, questions...)
 		}
 
@@ -173,8 +218,8 @@ var createCmd = &cobra.Command{
 
 		// IF NON-INTERACTIVE - USE THE DEFAULTS
 		case false:
-			allValues = defaults
-			allValues["projectName"] = projectName
+			// MERGE PRE-SURVEY VALUES AND DEFAULTS
+			allValues = sthingsBase.MergeMaps(defaults, allValues)
 		}
 
 		// RENDERING W/ ALL VALUES
@@ -245,7 +290,7 @@ var createCmd = &cobra.Command{
 		log.Info("GITHUB PR ANSWERS: ", githubPRAnswers)
 
 		// SET COMMIT MESSAGE
-		allValues["commitMessage"] = projectName
+		allValues["commitMessage"] = allValues["projectName"].(string)
 
 		// CREATE BRANCH ON GITHUB
 		modules.CreateBranchOnGitHub(token, gitOwner, author, authorMail, gitRepo, allValues["projectName"].(string), allValues["commitMessage"].(string), files2Commit)
@@ -254,13 +299,10 @@ var createCmd = &cobra.Command{
 		labels := []string{"infrastructre", "automation"}
 		prSubject := "TEST PR"
 
-		commitBranch := allValues["projectName"].(string)
-		repoBranch := allValues["projectName"].(string)
-
 		baseBranch := "main"
 		prDescription := "PR DESCRIPTION"
 
-		modules.CreatePullRequestOnGitHub(token, prSubject, gitOwner, gitOwner, commitBranch, gitRepo, gitRepo, repoBranch, baseBranch, prDescription, labels)
+		modules.CreatePullRequestOnGitHub(token, prSubject, gitOwner, gitOwner, gitConfig.GitBranch, gitRepo, gitRepo, gitConfig.GitBranch, baseBranch, prDescription, labels)
 
 		// SEND NOTIFICATION TO HOMERUN
 		if homerunToken != "" {
@@ -303,7 +345,6 @@ func init() {
 	createCmd.Flags().Bool("branch", true, "create branch on github. default: true")
 	createCmd.Flags().Bool("pr", true, "create pull request on github. default: true")
 	createCmd.Flags().String("profile", "tests/vspherevm-workflow.yaml", "workflow profile")
-	createCmd.Flags().String("project", "unset", "project name")
 	createCmd.Flags().String("output", "", "output directory")
 	createCmd.Flags().String("homerun", "https://homerun.homerun-dev.sthings-vsphere.labul.sva.de/generic", "homerun address")
 	createCmd.Flags().String("tmp", "/tmp/kaeffken", "tmp directory")
