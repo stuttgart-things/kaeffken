@@ -93,7 +93,7 @@ task branch
 
 </details>
 
-Add Features, fix, ...
+:bulb: :computer: :floppy_disk: Add Features, fixes, documentation ...
 
 <details><summary><b>LINT, TEST, BUILD, RUN</b></summary>
 
@@ -111,8 +111,32 @@ task pr
 
 </details>
 
+<details><summary><b>RELEASE</b></summary>
 
+```bash
+task release
+```
 
+</details>
+
+<details><summary><b>ALL TASKS</b></summary>
+
+```bash
+task: Available tasks for this project:
+* branch:              Create branch from main
+* build:               Install
+* build-ko:            Build KO Image
+* commit:              Commit + push code into branch
+* delete-branch:       Delete branch from origin
+* lint:                Lint code
+* pr:                  Create pull request into main
+* release:             Release
+* run:                 Run
+* test:                Test code
+* tests:               Built cli tests
+```
+
+</details>
 
 ## AUTHOR
 
