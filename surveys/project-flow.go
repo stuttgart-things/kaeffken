@@ -29,21 +29,42 @@ var (
 
 // CONFIG REPRESENTS THE STRUCTURE OF THE YAML FILE
 type Config struct {
-	GitRepo    string   `yaml:"gitRepo"`
-	GitOwner   string   `yaml:"gitOwner"`
-	GitBranch  string   `yaml:"gitBranch"`
-	RootFolder string   `yaml:"rootFolder"`
-	SubFolder  string   `yaml:"subFolder"`
-	Questions  []string `yaml:"questions"`
-	Templates  []string `yaml:"templates"`
-	Technology string   `yaml:"technology"`
+	GitRepo       string   `yaml:"gitRepo"`
+	GitOwner      string   `yaml:"gitOwner"`
+	GitBranch     string   `yaml:"gitBranch"`
+	CommitMessage string   `yaml:"commitMessage"`
+	RootFolder    string   `yaml:"rootFolder"`
+	SubFolder     string   `yaml:"subFolder"`
+	Questions     []string `yaml:"questions"`
+	Templates     []string `yaml:"templates"`
+	Technology    string   `yaml:"technology"`
+	PrTitle       string   `yaml:"prTitle"`
+	PrDescription string   `yaml:"prDescription"`
+	PrTags        []string `yaml:"prTags"`
 }
 
-func RunGitHubBranchingFlow(config Config, projectName string) map[string]interface{} {
+func RunGitHubBranchingFlow(config Config, values map[string]interface{}) map[string]interface{} {
 
-	configMap := ConfigToMap(config, projectName)
+	defaults := ConfigToMap(config)
+	// MERGE WITH VALUES
+	allValues := sthingsBase.MergeMaps(defaults, values)
 
-	branchDefault, err := sthingsBase.RenderTemplateInline(config.GitBranch, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, configMap)
+	branchDefault, err := sthingsBase.RenderTemplateInline(config.GitBranch, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	commitMessageDefault, err := sthingsBase.RenderTemplateInline(config.CommitMessage, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	PrTitleDefault, err := sthingsBase.RenderTemplateInline(config.CommitMessage, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	PrDescriptionDefault, err := sthingsBase.RenderTemplateInline(config.CommitMessage, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -54,7 +75,7 @@ func RunGitHubBranchingFlow(config Config, projectName string) map[string]interf
 			Default:   config.GitRepo,
 			MinLength: 3,
 			MaxLength: 18,
-			Id:        "girepo",
+			Id:        "gitRepo",
 			Type:      "string",
 		},
 		"GITHUB OWNER?": {
@@ -62,7 +83,7 @@ func RunGitHubBranchingFlow(config Config, projectName string) map[string]interf
 			Default:   config.GitOwner,
 			MinLength: 3,
 			MaxLength: 18,
-			Id:        "gitowner",
+			Id:        "gitOwner",
 			Type:      "string",
 		},
 		"BRANCH?": {
@@ -70,7 +91,31 @@ func RunGitHubBranchingFlow(config Config, projectName string) map[string]interf
 			Default:   string(branchDefault),
 			MinLength: 3,
 			MaxLength: 34,
-			Id:        "branchName",
+			Id:        "gitBranch",
+			Type:      "string",
+		},
+		"COMMIT MESSAGE?": {
+			Question:  "COMMIT MESSAGE?",
+			Default:   string(commitMessageDefault),
+			MinLength: 3,
+			MaxLength: 34,
+			Id:        "commitMessage",
+			Type:      "string",
+		},
+		"PULL REQUEST TITLE?": {
+			Question:  "PULL REQUEST TITLE?",
+			Default:   string(PrTitleDefault),
+			MinLength: 3,
+			MaxLength: 34,
+			Id:        "prTitle",
+			Type:      "string",
+		},
+		"PULL REQUEST DESCRIPTION?": {
+			Question:  "PULL REQUEST DESCRIPTION?",
+			Default:   string(PrDescriptionDefault),
+			MinLength: 3,
+			MaxLength: 34,
+			Id:        "prDescription",
 			Type:      "string",
 		},
 	}
@@ -83,16 +128,19 @@ func RunGitHubBranchingFlow(config Config, projectName string) map[string]interf
 	return githubPRAnswers
 }
 
-// ConfigToMap converts a Config struct to a map[string]interface{}
-func ConfigToMap(cfg Config, projectName string) map[string]interface{} {
+// CONFIGTOMAP CONVERTS A CONFIG STRUCT TO A MAP[STRING]INTERFACE{}
+func ConfigToMap(cfg Config) map[string]interface{} {
 	return map[string]interface{}{
-		"gitRepo":     cfg.GitRepo,
-		"gitOwner":    cfg.GitOwner,
-		"gitBranch":   cfg.GitBranch,
-		"rootFolder":  cfg.RootFolder,
-		"subFolder":   cfg.SubFolder,
-		"technology":  cfg.Technology,
-		"projectName": projectName,
+		"gitRepo":       cfg.GitRepo,
+		"gitOwner":      cfg.GitOwner,
+		"gitBranch":     cfg.GitBranch,
+		"commitMessage": cfg.CommitMessage,
+		"rootFolder":    cfg.RootFolder,
+		"subFolder":     cfg.SubFolder,
+		"technology":    cfg.Technology,
+		"prTitle":       cfg.PrTitle,
+		"prDescription": cfg.PrDescription,
+		"prTags":        cfg.PrTags,
 	}
 }
 
