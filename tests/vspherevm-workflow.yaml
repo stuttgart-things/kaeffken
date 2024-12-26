@@ -1,15 +1,22 @@
 ---
 gitRepo: stuttgart-things
 gitOwner: stuttgart-things
-gitBranch: "{{ .technology }}-{{ .projectName }}"
+gitBranch: "{{ .technology }}-{{ .vmName }}"
 rootFolder: terraform
-subFolder: "{{ .projectName }}"
+subFolder: "{{ .vmName }}"
 technology: terraform
+commitMessage: "Add {{ .vmName }} VM"
+
+prTitle: "Add {{ .vmName }} VM"
+prDescription: "Add {{ .vmName }} VM"
+prTags:
+  - terraform
+
 
 preQuestions:
-  - prompt: "Project name?"
+  - prompt: "VM name?"
     kind: ask
-    name: projectName
+    name: vmName
     type: string
     minLength: 3
     maxLength: 20
@@ -20,14 +27,13 @@ preQuestions:
       - "labda"
 
 # values:
-#   - vmName: {{ .projectName }}
-#   - commitaMessage: "Initial commit for {{ projectName }}"
+#   - vmName: {{ .vmName }}
+#   - commitaMessage: "Initial commit for {{ vmName }}"
 
 questions:
   - tests/vm-general.yaml
-  - tests/questions2.yaml
   - tests/{{ .envName }}.yaml
 
 templates:
-  - "/home/sthings/projects/stuttgart-things/terraform/vsphere-vm.tf.tpl:{{ .projectName }}.tf"
+  - "/home/sthings/projects/stuttgart-things/terraform/vsphere-vm.tf.tpl:{{ .vmName }}.tf"
   - "tests/state.tf.tpl:state/state.tf"

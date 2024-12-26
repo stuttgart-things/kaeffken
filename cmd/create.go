@@ -72,30 +72,6 @@ var createCmd = &cobra.Command{
 			outputDir = tmpDir + "/" + time.Now().Format("20060102_150405")
 		}
 
-		// if projectName == "unset" && runSurvey {
-		// 	// ASK FOR PROJECT NAME
-		// 	metaQuestions := map[string]modules.InputQuestion{
-		// 		"Project name?": {
-		// 			Question:  "Project name?",
-		// 			Default:   "",
-		// 			MinLength: 3,
-		// 			MaxLength: 18,
-		// 			Id:        "projectName",
-		// 			Type:      "string",
-		// 		},
-		// 	}
-
-		// 	projectAnswers, err := modules.AskInputQuestions(metaQuestions)
-		// 	if err != nil {
-		// 		log.Fatalf("ERROR ASKING META QUESTIONS: %v", err)
-		// 	}
-
-		// 	projectName = projectAnswers["projectName"].(string)
-		// }
-
-		// allValues["projectName"] = projectName
-		// fmt.Println("ALLL", allValues)
-
 		// READ GIT PROFILE
 		gitConfig := surveys.ReadGitProfile(profile)
 		log.Info("ALL QUESTION-FILES: ", gitConfig.Questions)
@@ -104,6 +80,7 @@ var createCmd = &cobra.Command{
 		log.Info("DEFAULT: GITHUB-REPO: ", gitConfig.GitRepo)
 		log.Info("DEFAULT GITHUB-OWNER: ", gitConfig.GitOwner)
 		log.Info("DEFAULT ROOTFOLDER: ", gitConfig.RootFolder)
+		log.Info("PULL REQUEST TAGS: ", gitConfig.PrTags)
 
 		// LOAD AND ASK PRE QUESTIONS
 		preQuestions, _ := modules.LoadQuestionFile(profile)
@@ -281,28 +258,49 @@ var createCmd = &cobra.Command{
 		// CREATE BRANCH AND PR ON GITHUB
 		if runSurvey {
 			// ASK FOR GITHUB BRANCHING FLOW
-			githubPRAnswers = surveys.RunGitHubBranchingFlow(gitConfig, "test-project")
+			githubPRAnswers = surveys.RunGitHubBranchingFlow(gitConfig, allValues)
 		} else {
 			// USE DEFAULTS FROM PROFILE
-			githubPRAnswers = surveys.ConfigToMap(gitConfig, "test-project")
+			githubPRAnswers = surveys.ConfigToMap(gitConfig)
+			//MERGE
+			githubPRAnswers = sthingsBase.MergeMaps(githubPRAnswers, allValues)
+
 		}
 
-		log.Info("GITHUB PR ANSWERS: ", githubPRAnswers)
-
-		// SET COMMIT MESSAGE
-		allValues["commitMessage"] = allValues["projectName"].(string)
+		log.Info("GIT-REPOSITORY: ", githubPRAnswers["gitRepo"].(string))
+		log.Info("GIT-OWNER: ", githubPRAnswers["gitOwner"].(string))
+		log.Info("GIT-BRANCH: ", githubPRAnswers["gitBranch"].(string))
+		log.Info("COMMIT-MESSAGE: ", githubPRAnswers["commitMessage"].(string))
+		log.Info("PULL REQUEST TITLE: ", githubPRAnswers["prTitle"].(string))
+		log.Info("PULL REQUEST DESCRIPTION: ", githubPRAnswers["prDescription"].(string))
 
 		// CREATE BRANCH ON GITHUB
-		modules.CreateBranchOnGitHub(token, gitOwner, author, authorMail, gitRepo, allValues["projectName"].(string), allValues["commitMessage"].(string), files2Commit)
+		modules.CreateBranchOnGitHub(
+			token,
+			githubPRAnswers["gitOwner"].(string),
+			author,
+			authorMail,
+			githubPRAnswers["gitRepo"].(string),
+			githubPRAnswers["gitBranch"].(string),
+			githubPRAnswers["commitMessage"].(string),
+			files2Commit,
+		)
 
 		// CREATE PR ON GITHUB
-		labels := []string{"infrastructre", "automation"}
-		prSubject := "TEST PR"
 
-		baseBranch := "main"
-		prDescription := "PR DESCRIPTION"
-
-		modules.CreatePullRequestOnGitHub(token, prSubject, gitOwner, gitOwner, gitConfig.GitBranch, gitRepo, gitRepo, gitConfig.GitBranch, baseBranch, prDescription, labels)
+		modules.CreatePullRequestOnGitHub(
+			token,
+			githubPRAnswers["prTitle"].(string),
+			githubPRAnswers["gitOwner"].(string),
+			githubPRAnswers["gitOwner"].(string),
+			githubPRAnswers["gitBranch"].(string),
+			githubPRAnswers["gitRepo"].(string),
+			githubPRAnswers["gitRepo"].(string),
+			githubPRAnswers["gitBranch"].(string),
+			"main",
+			githubPRAnswers["prDescription"].(string),
+			gitConfig.PrTags,
+		)
 
 		// SEND NOTIFICATION TO HOMERUN
 		if homerunToken != "" {
