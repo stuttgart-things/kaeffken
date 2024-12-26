@@ -7,13 +7,14 @@ require (
 	github.com/fatih/color v1.18.0
 	github.com/go-git/go-billy/v5 v5.6.0
 	github.com/google/go-github/v62 v62.0.0
+	github.com/google/go-github/v68 v68.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	github.com/stuttgart-things/homerun-library v0.0.0-20241203091353-87840452d0ba
 	github.com/stuttgart-things/sthingsBase v0.1.41
 	github.com/stuttgart-things/sthingsCli v0.1.124
 	go.hein.dev/go-version v0.1.0
-	gopkg.in/yaml.v3 v3.0.1
+	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
