@@ -1,3 +1,12 @@
+## [0.2.13](https://github.com/stuttgart-things/kaeffken/compare/v0.2.12...v0.2.13) (2024-12-26)
+
+
+### Bug Fixes
+
+* **deps:** update module gopkg.in/yaml.v2 to v3 ([41c3ada](https://github.com/stuttgart-things/kaeffken/commit/41c3ada2ab01786a37d5f84e13416c72b13bb282))
+* updated create cmd ([7f28344](https://github.com/stuttgart-things/kaeffken/commit/7f2834400149d5676005b7fe98d6f0604386377b))
+* updated golang deps ([2b01dbc](https://github.com/stuttgart-things/kaeffken/commit/2b01dbc6875da643ae5ad8aca44231418368134b))
+
 ## [0.2.12](https://github.com/stuttgart-things/kaeffken/compare/v0.2.11...v0.2.12) (2024-12-25)
 
 
