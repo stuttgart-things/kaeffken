@@ -7,7 +7,6 @@ require (
 	github.com/fatih/color v1.18.0
 	github.com/go-git/go-billy/v5 v5.6.0
 	github.com/google/go-github/v62 v62.0.0
-	github.com/google/go-github/v68 v68.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	github.com/stuttgart-things/homerun-library v0.0.0-20241203091353-87840452d0ba
