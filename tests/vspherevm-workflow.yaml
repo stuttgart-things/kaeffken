@@ -27,7 +27,7 @@ preQuestions:
 
 # SHOULD BE IMPLEMENTED | BEFORE RENDERING - SET/PRE-RENDER THOSE ALIASES
 aliases:
-  - "stateKey: {{ .vmName }}"
+  - "stateKey:{{ .vmName }}"
 
 questions:
   - tests/vm-general.yaml
