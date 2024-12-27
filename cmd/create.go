@@ -216,8 +216,8 @@ var createCmd = &cobra.Command{
 				aliasKey := strings.TrimSpace(aliasValues[0])
 				renderedAliasValue := string(strings.TrimSpace(string(aliasValue)))
 
-				allValues[aliasKey] = aliasValue
-				log.Info("ALIAS ADDED: ", aliasKey, ":", renderedAliasValue)
+				allValues[string(aliasKey)] = string(aliasValue)
+				log.Info("ALIAS ADDED: ", aliasKey, ":", string(renderedAliasValue))
 			}
 		} else {
 			log.Info("NO ALIASES FOUND")
