@@ -89,7 +89,7 @@ kaeffken encrypt \
 
 ## DEV
 
-<details><summary><b>BRANCH BRANCH</b></summary>
+<details><summary><b>CREATE BRANCH</b></summary>
 
 ```bash
 task branch

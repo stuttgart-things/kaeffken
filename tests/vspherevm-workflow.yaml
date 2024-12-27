@@ -12,7 +12,6 @@ prDescription: "Add {{ .vmName }} VM"
 prTags:
   - terraform
 
-
 preQuestions:
   - prompt: "VM name?"
     kind: ask
@@ -26,9 +25,9 @@ preQuestions:
       - "labul"
       - "labda"
 
-# values:
-#   - vmName: {{ .vmName }}
-#   - commitaMessage: "Initial commit for {{ vmName }}"
+# SHOULD BE IMPLEMENTED | BEFORE RENDERING - SET/PRE-RENDER THOSE ALIASES
+aliases:
+  - "stateKey: {{ .vmName }}"
 
 questions:
   - tests/vm-general.yaml

@@ -81,6 +81,7 @@ var createCmd = &cobra.Command{
 		log.Info("DEFAULT GITHUB-OWNER: ", gitConfig.GitOwner)
 		log.Info("DEFAULT ROOTFOLDER: ", gitConfig.RootFolder)
 		log.Info("PULL REQUEST TAGS: ", gitConfig.PrTags)
+		log.Info("ALIASES: ", gitConfig.Aliases)
 
 		// LOAD AND ASK PRE QUESTIONS
 		preQuestions, _ := modules.LoadQuestionFile(profile)
@@ -167,8 +168,6 @@ var createCmd = &cobra.Command{
 
 		log.Info("ALL GIVE TEMPLATES DO EXIST")
 
-		fmt.Println(allTemplateData)
-
 		// BUILD THE SURVEY + GET DEFAULTS, VALUES FROM FUNCTION CALLS AND RANDOM VALUES
 		survey, defaults, err := modules.BuildSurvey(allQuestions)
 		if err != nil {
@@ -197,6 +196,31 @@ var createCmd = &cobra.Command{
 		case false:
 			// MERGE PRE-SURVEY VALUES AND DEFAULTS
 			allValues = sthingsBase.MergeMaps(defaults, allValues)
+		}
+
+		// RENDER ALIASES
+		if len(gitConfig.Aliases) > 0 {
+
+			log.Info("RENDERING ALIASES")
+
+			for _, alias := range gitConfig.Aliases {
+
+				// SPLIT ALIAS KEY/VALUE BY :
+				aliasValues := strings.Split(alias, ":")
+				aliasValue, err := sthingsBase.RenderTemplateInline(aliasValues[1], renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+				if err != nil {
+					fmt.Println(err)
+				}
+
+				// ASSIGN ALIAS TO ALL VALUES
+				aliasKey := strings.TrimSpace(aliasValues[0])
+				renderedAliasValue := string(strings.TrimSpace(string(aliasValue)))
+
+				allValues[aliasKey] = aliasValue
+				log.Info("ALIAS ADDED: ", aliasKey, ":", renderedAliasValue)
+			}
+		} else {
+			log.Info("NO ALIASES FOUND")
 		}
 
 		// RENDERING W/ ALL VALUES
