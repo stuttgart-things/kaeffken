@@ -1,6 +1,7 @@
 /*
 Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 */
+
 package cmd
 
 import (
@@ -56,7 +57,6 @@ var decryptCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(decryptCmd)
-
 }
 
 func init() {

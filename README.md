@@ -88,6 +88,15 @@ kaeffken encrypt \
 kaeffken encrypt \
 --source tests/secret.yaml \
 --output file \
+--destination ~/projects/sops/ \
+--name config \
+--age age1g438...
+```
+
+```bash
+kaeffken encrypt \
+--source tests/secret.yaml \
+--output file \
 --pr true \
 --destination /tmp \
 --clusterPath=clusters/labul/test1
