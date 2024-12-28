@@ -21,10 +21,10 @@ func TestVerifyValues(t *testing.T) {
 
 	values1 := make(map[string]string)
 	values1["repository"] = "https://github.com/stuttgart-things/stuttgart-things.git"
-	values1["branch"] = ""
+	values1["branch"] = "main"
 
 	tests := []test{
-		{mandatoryFlags: []string{"repository", "branch", "clusterName", "envPath"}, values: values1, want: false},
+		{mandatoryFlags: []string{"repository", "branch", "clusterName", "envPath"}, values: values1, want: true},
 		{mandatoryFlags: []string{"repository"}, values: values1, want: true},
 	}
 
