@@ -5,6 +5,7 @@ go 1.23.1
 require (
 	github.com/charmbracelet/huh v0.6.0
 	github.com/fatih/color v1.18.0
+	github.com/getsops/sops/v3 v3.9.0
 	github.com/go-git/go-billy/v5 v5.6.0
 	github.com/google/go-github/v62 v62.0.0
 	github.com/spf13/cobra v1.8.1
@@ -93,7 +94,6 @@ require (
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/getsops/gopgagent v0.0.0-20240527072608-0c14999532fe // indirect
-	github.com/getsops/sops/v3 v3.9.0 // indirect
 	github.com/git-chglog/git-chglog v0.15.4 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-git/v5 v5.12.0 // indirect
