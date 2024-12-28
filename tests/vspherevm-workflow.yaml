@@ -12,6 +12,16 @@ prDescription: "Add {{ .vmName }} VM"
 prTags:
   - terraform
 
+secretFiles:
+  - "tests/secrets.yaml" # SOURCE SECRET FILE
+
+secretAliases:
+  - "{{ .envName }}-{{ .cloud }}-server:vsphere_server"    # KEYINSOURCE:TARGETKEY
+  - "{{ .envName }}-{{ .cloud }}-user:vsphere_user"
+  - "{{ .envName }}-{{ .cloud }}-password:vsphere_password"
+  - "{{ .envName }}-{{ .cloud }}-vmsshuser:vm_ssh_user"
+  - "{{ .envName }}-{{ .cloud }}-vmsshpassword:vm_ssh_password"
+
 preQuestions:
   - prompt: "VM name?"
     kind: ask
@@ -24,7 +34,11 @@ preQuestions:
     options:
       - "labul"
       - "labda"
-
+  - prompt: "Cloud name"
+    name: envName
+    options:
+      - "vsphere"
+      - "proxmox"
 # SHOULD BE IMPLEMENTED | BEFORE RENDERING - SET/PRE-RENDER THOSE ALIASES
 aliases:
   - "stateKey:{{ .vmName }}"

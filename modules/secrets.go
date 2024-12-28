@@ -5,8 +5,6 @@ Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 package modules
 
 import (
-	"fmt"
-
 	"gopkg.in/yaml.v3"
 )
 
@@ -24,19 +22,22 @@ func CreateSecretsMap(yamlData []byte, wantedSecrets map[string]interface{}) (se
 	}
 
 	// CREATE THE SECRETS MAP
-	for key, value := range data {
-		fmt.Println("KEYY", key)
+	for _, value := range data {
 
 		switch v := value.(type) {
 		case map[string]interface{}:
 			for k, v := range v {
+
+				if wantedSecrets == nil {
+					secrets[k] = v
+				}
 
 				// CHECK IF THE KEY IS IN THE WANTED SECRETS
 				if _, ok := wantedSecrets[k]; ok {
 					secrets[wantedSecrets[k].(string)] = v
 				}
 
-				fmt.Println(k, v)
+				// fmt.Println(k, v)
 			}
 		}
 

@@ -49,9 +49,11 @@ var decryptCmd = &cobra.Command{
 			log.Error("FAILED TO DECRYPT: ", err)
 		}
 
+		secretsMap := modules.CreateSecretsMap(decryptedFile, nil)
+		log.Info("CREATED SECRETS MAP: ", secretsMap)
+
 		// HANDLE OUTPUT
 		modules.HandleOutput(outputFormat, destinationPath, string(decryptedFile))
-
 	},
 }
 
