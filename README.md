@@ -20,6 +20,31 @@ kaeffken create --survey=true --questions "tests/questions1.yaml,tests/questions
 
 </details>
 
+<details><summary><b>DECRYPT</b></summary>
+
+## DECRYPT FILE (SOPS)
+
+### STDOUT
+
+```bash
+export SOPS_AGE_KEY=AGE-SECRET-KEY-1T22K05UTRDU..
+kaeffken decrypt \
+--source encrypted.yaml
+```
+
+### TO FILE
+
+```bash
+kaeffken decrypt \
+--source encrypted.yaml \
+--key AGE-SECRET-KEY-1T22K05UTRDU.. \
+--output file \
+--destination /tmp/decrypted.yaml
+```
+
+</details>
+
+
 <details><summary><b>APPS</b></summary>
 
 ```bash
