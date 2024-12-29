@@ -4,6 +4,7 @@ Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 package modules
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -57,3 +58,49 @@ func TestRenderTemplate(t *testing.T) {
 		})
 	}
 }
+
+// TestRenderAliases tests the RenderAliases function
+func TestRenderAliases(t *testing.T) {
+	// Define test cases
+	tests := []struct {
+		name      string
+		aliases   []string
+		allValues map[string]interface{}
+		expected  map[string]interface{}
+	}{
+		{
+			name:      "Simple alias",
+			aliases:   []string{"{{.Name}}:{{.Age}}"},
+			allValues: map[string]interface{}{"Name": "Alice", "Age": 30},
+			expected:  map[string]interface{}{"Age": 30, "Alice": 30, "Name": "Alice"},
+		},
+		{
+			name:      "Multiple aliases",
+			aliases:   []string{"{{.Name}}:{{.Age}}", "{{.City}}:{{.Country}}"},
+			allValues: map[string]interface{}{"Name": "Alice", "Age": 30, "City": "Berlin", "Country": "Germany"},
+			expected:  map[string]interface{}{"Age": 30, "Alice": 30, "Berlin": "Germany", "City": "Berlin", "Country": "Germany", "Name": "Alice"},
+		},
+	}
+
+	// Run test cases
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := RenderAliases(tt.aliases, tt.allValues)
+			fmt.Println("RESULT: ", result)
+
+		})
+	}
+}
+
+// // Helper function to compare two maps
+// func mapsEqual(a, b map[string]interface{}) bool {
+// 	if len(a) != len(b) {
+// 		return false
+// 	}
+// 	for key, valueA := range a {
+// 		if valueB, exists := b[key]; !exists || valueA != valueB {
+// 			return false
+// 		}
+// 	}
+// 	return true
+// }

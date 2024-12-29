@@ -82,6 +82,8 @@ var createCmd = &cobra.Command{
 		log.Info("DEFAULT ROOTFOLDER: ", gitConfig.RootFolder)
 		log.Info("PULL REQUEST TAGS: ", gitConfig.PrTags)
 		log.Info("ALIASES: ", gitConfig.Aliases)
+		log.Info("SECRET-ALIASES: ", gitConfig.SecretAliases)
+		log.Info("SECRET-FILES: ", gitConfig.SecretFiles)
 
 		// LOAD AND ASK PRE QUESTIONS
 		preQuestions, _ := modules.LoadQuestionFile(profile)
@@ -200,30 +202,25 @@ var createCmd = &cobra.Command{
 
 		// RENDER ALIASES
 		if len(gitConfig.Aliases) > 0 {
-
-			log.Info("RENDERING ALIASES")
-
-			for _, alias := range gitConfig.Aliases {
-
-				// SPLIT ALIAS KEY/VALUE BY :
-				aliasValues := strings.Split(alias, ":")
-				aliasValue, err := sthingsBase.RenderTemplateInline(aliasValues[1], renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
-				if err != nil {
-					fmt.Println(err)
-				}
-
-				// ASSIGN ALIAS TO ALL VALUES
-				aliasKey := strings.TrimSpace(aliasValues[0])
-				renderedAliasValue := string(strings.TrimSpace(string(aliasValue)))
-
-				allValues[string(aliasKey)] = string(aliasValue)
-				log.Info("ALIAS ADDED: ", aliasKey, ":", string(renderedAliasValue))
-			}
+			allValues = modules.RenderAliases(gitConfig.Aliases, allValues)
 		} else {
 			log.Info("NO ALIASES FOUND")
 		}
 
-		// RENDERING W/ ALL VALUES
+		// RENDER SECRET ALIASES + SECRET FILES
+		if len(gitConfig.SecretAliases) > 0 {
+			allValues = modules.RenderAliases(gitConfig.SecretAliases, allValues)
+		} else {
+			log.Info("NO SECRET ALIASES FOUND")
+		}
+
+		// CREATE SECRET FILES (IF DEFINED)
+		if len(gitConfig.SecretFiles) > 0 {
+			allSecretsFromAllSecretsFile := modules.GetAllSecretsFromSopsDecyptedFiles(gitConfig.SecretFiles, allValues)
+			fmt.Println("ALL SECRETS", allSecretsFromAllSecretsFile)
+		}
+
+		//RENDER TEMPLATES W/ ALL VALUES
 		for _, template := range allTemplateData {
 
 			// RENDER TEMPLATE

@@ -22,6 +22,8 @@ vars:
   GIT_COMMIT:
     sh: git log -n 1 --format=%h
 
+dotenv: ['.env', '{{.HOME}}/.env']
+
 tasks:
   build-ko:
     desc: Build image w/ KO
