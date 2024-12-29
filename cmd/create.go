@@ -6,7 +6,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -57,7 +56,7 @@ var createCmd = &cobra.Command{
 	Long:  `Create things like rendered resource definitions for storing in gitops repositories.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		// GET VARS
+		// GET VARS FROM FLAGS
 		runSurvey, _ := cmd.LocalFlags().GetBool("survey")
 		profile, _ := cmd.LocalFlags().GetString("profile")
 		author, _ := cmd.LocalFlags().GetString("author")
@@ -66,16 +65,15 @@ var createCmd = &cobra.Command{
 		outputDir, _ := cmd.LocalFlags().GetString("output")
 		homerunAddr, _ := cmd.LocalFlags().GetString("homerun")
 
+		// SET DEFAULTS
 		if homerunToken == "" {
 			log.Warn("ERROR: HOMERUN_TOKEN ENVIRONMENT VARIABLE IS NOT SET")
 		}
-
-		// SET DEFAULTS
 		if outputDir == "" {
 			outputDir = tmpDir + "/" + time.Now().Format("20060102_150405")
 		}
 
-		// READ GIT PROFILE
+		// READ + OUTPUT GIT PROFILE
 		gitConfig := surveys.ReadGitProfile(profile)
 		log.Info("ALL QUESTION-FILES: ", gitConfig.Questions)
 		log.Info("ALL TEMPLATE-FILES ", gitConfig.Templates)
@@ -88,7 +86,7 @@ var createCmd = &cobra.Command{
 		log.Info("SECRET-ALIASES: ", gitConfig.SecretAliases)
 		log.Info("SECRET-FILES: ", gitConfig.SecretFiles)
 
-		// LOAD AND ASK PRE QUESTIONS
+		// LOAD AND ASK PRE-QUESTIONS
 		preQuestions, _ := modules.LoadQuestionFile(profile)
 		if len(preQuestions) > 0 {
 			log.Info("PRE-QUESTIONS FOUND")
@@ -104,7 +102,6 @@ var createCmd = &cobra.Command{
 
 		// SET PRE-SURVEY VALUES TO ALL VALUES
 		allValues = preSurveyValues
-
 		if runSurvey {
 			// SET ANWERS TO ALL VALUES
 			err = preSurvey.Run()
@@ -116,7 +113,6 @@ var createCmd = &cobra.Command{
 			for _, question := range preQuestions {
 				allValues[question.Name] = question.Default
 			}
-
 		}
 
 		// LOAD ALL QUESTION FILES
@@ -261,8 +257,8 @@ var createCmd = &cobra.Command{
 
 			}
 			// CREATING DIRS
-			sthingsBase.CreateNestedDirectoryStructure(GetFolderPath(outputFilePathLocal), 0777)
-			log.Info("CREATED DIR: ", GetFolderPath(outputFilePathLocal))
+			sthingsBase.CreateNestedDirectoryStructure(modules.GetFolderPath(outputFilePathLocal), 0777)
+			log.Info("CREATED DIR: ", modules.GetFolderPath(outputFilePathLocal))
 
 			// CREATING FILE ON DISK
 			sthingsBase.WriteDataToFile(outputFilePathLocal, string(renderedTemplate))
@@ -407,8 +403,4 @@ func init() {
 	createCmd.Flags().String("tmp", "/tmp/kaeffken", "tmp directory")
 	createCmd.Flags().String("mail", "kaeffken@sthings.com", "author mail")
 	createCmd.Flags().String("author", "kaeffken", "author name")
-}
-
-func GetFolderPath(filePath string) string {
-	return filepath.Dir(filePath)
 }

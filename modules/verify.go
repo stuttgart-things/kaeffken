@@ -4,6 +4,7 @@ Copyright © 2024 PATRICK HERMANN PATRICK.HERMANN@SVA.DE
 package modules
 
 import (
+	"path/filepath"
 	"strings"
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
@@ -48,4 +49,8 @@ func SetAppParameter[T comparable](appValue, appDefault, technologyDefault T) T 
 	} else {
 		return technologyDefault
 	}
+}
+
+func GetFolderPath(filePath string) string {
+	return filepath.Dir(filePath)
 }
