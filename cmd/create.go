@@ -10,9 +10,12 @@ import (
 	"strings"
 	"time"
 
+	sthingsCli "github.com/stuttgart-things/sthingsCli"
+
 	homerun "github.com/stuttgart-things/homerun-library"
 	"github.com/stuttgart-things/kaeffken/modules"
 	"github.com/stuttgart-things/kaeffken/surveys"
+	"gopkg.in/yaml.v2"
 
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
@@ -218,6 +221,22 @@ var createCmd = &cobra.Command{
 		if len(gitConfig.SecretFiles) > 0 {
 			allSecretsFromAllSecretsFile := modules.GetAllSecretsFromSopsDecyptedFiles(gitConfig.SecretFiles, allValues)
 			fmt.Println("ALL SECRETS", allSecretsFromAllSecretsFile)
+
+			// Convert map to YAML
+			yamlData, err := yaml.Marshal(allSecretsFromAllSecretsFile)
+			if err != nil {
+				fmt.Printf("Error converting to YAML: %v\n", err)
+				return
+			}
+
+			// Print the YAML
+			fmt.Println(string(yamlData))
+
+			// READ AGE KEY FROM ENV
+			ageKey := os.Getenv("AGE")
+			encryptedSecret := sthingsCli.EncryptStore(ageKey, string(yamlData))
+			fmt.Println(encryptedSecret)
+
 		}
 
 		//RENDER TEMPLATES W/ ALL VALUES

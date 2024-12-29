@@ -22,7 +22,7 @@ secretAliases:
   - "{{ .envName }}-{{ .cloud }}-vmsshuser:vm_ssh_user"
   - "{{ .envName }}-{{ .cloud }}-vmsshpassword:vm_ssh_password"
 
-preSurvey:
+preQuestions:
   - prompt: "VM name?"
     kind: ask
     name: vmName
