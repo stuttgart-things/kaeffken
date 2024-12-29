@@ -217,30 +217,6 @@ var createCmd = &cobra.Command{
 			log.Info("NO SECRET ALIASES FOUND")
 		}
 
-		// CREATE SECRET FILES (IF DEFINED)
-		if len(gitConfig.SecretFiles) > 0 {
-			allSecretsFromAllSecretsFile := modules.GetAllSecretsFromSopsDecyptedFiles(gitConfig.SecretFiles, allValues)
-			fmt.Println("ALL SECRETS", allSecretsFromAllSecretsFile)
-
-			// CONVERT MAP TO YAML
-			yamlData, err := yaml.Marshal(allSecretsFromAllSecretsFile)
-			if err != nil {
-				fmt.Printf("ERROR CONVERTING TO YAML: %v\n", err)
-				return
-			}
-
-			// Print the YAML
-			fmt.Println(string(yamlData))
-
-			// READ AGE KEY FROM ENV
-			ageKey := os.Getenv("AGE")
-			encryptedSecret := sthingsCli.EncryptStore(ageKey, string(yamlData))
-			fmt.Println(encryptedSecret)
-
-			// WRITE ENCRYPTED SECRET TO FILE
-			sthingsBase.WriteDataToFile("/tmp/encrypted-secret.yaml", encryptedSecret)
-		}
-
 		//RENDER TEMPLATES W/ ALL VALUES
 		for _, template := range allTemplateData {
 
@@ -266,7 +242,7 @@ var createCmd = &cobra.Command{
 				log.Info("CREATING RENDERED TEMPLATES ON DISK")
 
 				outputQuestions := map[string]modules.InputQuestion{
-					"Create file to?": {
+					"SAVE FILE TO?": {
 						Question:  "CREATE RENDERED TEMPATE OF " + template.TemplateFileName + " TO?",
 						Default:   outputFilePathLocal,
 						MinLength: 5,
@@ -292,6 +268,48 @@ var createCmd = &cobra.Command{
 			sthingsBase.WriteDataToFile(outputFilePathLocal, string(renderedTemplate))
 			log.Info("RENDERED TEMPLATE WRITTEN TO: ", outputFilePathLocal)
 			files2Commit = append(files2Commit, outputFilePathLocal+":"+outputFilePathGit)
+
+		}
+
+		// CREATE SECRET FILE
+		if len(gitConfig.SecretFiles) > 0 {
+			allSecretsFromAllSecretsFile := modules.GetAllSecretsFromSopsDecyptedFiles(gitConfig.SecretFiles, allValues)
+			fmt.Println("ALL SECRETS", allSecretsFromAllSecretsFile)
+
+			// CONVERT MAP TO YAML
+			yamlData, err := yaml.Marshal(allSecretsFromAllSecretsFile)
+			if err != nil {
+				fmt.Printf("ERROR CONVERTING TO YAML: %v\n", err)
+				return
+			}
+
+			// Print the YAML
+			fmt.Println(string(yamlData))
+
+			// READ AGE KEY FROM ENV
+			ageKey := os.Getenv("AGE")
+			encryptedSecret := sthingsCli.EncryptStore(ageKey, string(yamlData))
+			fmt.Println(encryptedSecret)
+
+			// RENDER OUTPUT FILE PATH
+			secretOutputName, err := sthingsBase.RenderTemplateInline(gitConfig.SecretFileOutputName, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+			if err != nil {
+				log.Error("ERROR RENDERING QUESTION FILE: ", err)
+			}
+
+			// WRITE ENCRYPTED SECRET TO FILE
+			// RENDER SUBFOLDER
+			renderedSubFolder, err := sthingsBase.RenderTemplateInline(gitConfig.SubFolder, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			secretOutputPath := outputDir + "/" + string(secretOutputName)
+			outputFilePathGit := gitConfig.RootFolder + "/" + string(renderedSubFolder) + "/" + string(secretOutputName)
+
+			sthingsBase.WriteDataToFile(secretOutputPath, encryptedSecret)
+			log.Info("SECRET OUTPUT: ", secretOutputPath)
+			files2Commit = append(files2Commit, secretOutputPath+":"+outputFilePathGit)
 
 		}
 
@@ -329,7 +347,6 @@ var createCmd = &cobra.Command{
 		)
 
 		// CREATE PR ON GITHUB
-
 		modules.CreatePullRequestOnGitHub(
 			token,
 			githubPRAnswers["prTitle"].(string),
