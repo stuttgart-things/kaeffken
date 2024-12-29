@@ -90,16 +90,6 @@ tasks:
       - go mod tidy
       - cmd: go test ./... -v
 
-  # run:
-  #   desc: Build code
-  #   deps:
-  #     - lint
-  #     - test
-  #   cmds:
-  #     - go mod tidy
-  #     - cmd: go install -ldflags="-X {{ .MODULE }}/cmd.date={{ .DATE }} -X {{ .MODULE }}/cmd.version={{ .VERSION }}-{{ .BRANCH }} -X {{ .MODULE }}/cmd.commit={{ .GIT_COMMIT }}"
-  #     - cmd: "{{ .PROJECT_NAME }}"
-
   commit:
     desc: Commit + push code into branch
     cmds:
@@ -164,3 +154,4 @@ tasks:
       - goreleaser release --skip=publish --snapshot --clean
       - goreleaser release --clean
       - rm -rf ./dist
+      - task: build-ko
