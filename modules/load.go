@@ -88,9 +88,7 @@ func LoadClustersfile(yamlFileContent string) {
 		fmt.Println(cluster)
 		for key, value := range cluster {
 			fmt.Println(key, value)
-
 		}
-
 	}
 
 }
