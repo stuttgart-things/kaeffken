@@ -12,15 +12,16 @@ prDescription: "Add {{ .vmName }} VM"
 prTags:
   - terraform
 
+#SECRETS
 secretFiles:
-  - "tests/secret-config.yaml:{{ .envName }}-{{ .cloud }}-vars.yaml" # SOURCE SECRET FILE
-
+  - "tests/secret-config.yaml"
 secretAliases:
   - "{{ .envName }}-{{ .cloud }}-server:vsphere_server"    # KEYINSOURCE:TARGETKEY
   - "{{ .envName }}-{{ .cloud }}-user:vsphere_user"
   - "{{ .envName }}-{{ .cloud }}-password:vsphere_password"
   - "{{ .envName }}-{{ .cloud }}-vmsshuser:vm_ssh_user"
   - "{{ .envName }}-{{ .cloud }}-vmsshpassword:vm_ssh_password"
+secretFileOutputName: "secret-vars.yaml" # SOURCE SECRET FILE
 
 preQuestions:
   - prompt: "VM name?"

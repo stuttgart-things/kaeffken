@@ -29,21 +29,22 @@ var (
 
 // CONFIG REPRESENTS THE STRUCTURE OF THE YAML FILE
 type Config struct {
-	GitRepo       string   `yaml:"gitRepo"`
-	GitOwner      string   `yaml:"gitOwner"`
-	GitBranch     string   `yaml:"gitBranch"`
-	CommitMessage string   `yaml:"commitMessage"`
-	RootFolder    string   `yaml:"rootFolder"`
-	SubFolder     string   `yaml:"subFolder"`
-	Questions     []string `yaml:"questions"`
-	Templates     []string `yaml:"templates"`
-	Technology    string   `yaml:"technology"`
-	PrTitle       string   `yaml:"prTitle"`
-	PrDescription string   `yaml:"prDescription"`
-	PrTags        []string `yaml:"prTags"`
-	Aliases       []string `yaml:"aliases"`
-	SecretAliases []string `yaml:"secretAliases"`
-	SecretFiles   []string `yaml:"secretFiles"`
+	GitRepo              string   `yaml:"gitRepo"`
+	GitOwner             string   `yaml:"gitOwner"`
+	GitBranch            string   `yaml:"gitBranch"`
+	CommitMessage        string   `yaml:"commitMessage"`
+	RootFolder           string   `yaml:"rootFolder"`
+	SubFolder            string   `yaml:"subFolder"`
+	Questions            []string `yaml:"questions"`
+	Templates            []string `yaml:"templates"`
+	Technology           string   `yaml:"technology"`
+	PrTitle              string   `yaml:"prTitle"`
+	PrDescription        string   `yaml:"prDescription"`
+	PrTags               []string `yaml:"prTags"`
+	Aliases              []string `yaml:"aliases"`
+	SecretAliases        []string `yaml:"secretAliases"`
+	SecretFiles          []string `yaml:"secretFiles"`
+	SecretFileOutputName string   `yaml:"secretFileOutputName"`
 }
 
 func RunGitHubBranchingFlow(config Config, values map[string]interface{}) map[string]interface{} {
@@ -134,18 +135,19 @@ func RunGitHubBranchingFlow(config Config, values map[string]interface{}) map[st
 // CONFIGTOMAP CONVERTS A CONFIG STRUCT TO A MAP[STRING]INTERFACE{}
 func ConfigToMap(cfg Config) map[string]interface{} {
 	return map[string]interface{}{
-		"gitRepo":       cfg.GitRepo,
-		"gitOwner":      cfg.GitOwner,
-		"gitBranch":     cfg.GitBranch,
-		"commitMessage": cfg.CommitMessage,
-		"rootFolder":    cfg.RootFolder,
-		"subFolder":     cfg.SubFolder,
-		"technology":    cfg.Technology,
-		"prTitle":       cfg.PrTitle,
-		"prDescription": cfg.PrDescription,
-		"prTags":        cfg.PrTags,
-		"aliases":       cfg.Aliases,
-		"secretAliases": cfg.SecretAliases,
+		"gitRepo":              cfg.GitRepo,
+		"gitOwner":             cfg.GitOwner,
+		"gitBranch":            cfg.GitBranch,
+		"commitMessage":        cfg.CommitMessage,
+		"rootFolder":           cfg.RootFolder,
+		"subFolder":            cfg.SubFolder,
+		"technology":           cfg.Technology,
+		"prTitle":              cfg.PrTitle,
+		"prDescription":        cfg.PrDescription,
+		"prTags":               cfg.PrTags,
+		"aliases":              cfg.Aliases,
+		"secretAliases":        cfg.SecretAliases,
+		"secretFileOutputName": cfg.SecretFileOutputName,
 	}
 }
 

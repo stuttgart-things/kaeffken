@@ -85,11 +85,8 @@ func GetAllSecretsFromSopsDecyptedFiles(secretFiles []string, allValues map[stri
 	// GET ALL SECRETS TO A VALUES MAP
 	for _, secretFile := range secretFiles {
 
-		// SPLIT SECRET FILE PATH BY :
-		secretFilePaths := strings.Split(secretFile, ":")
-
 		// RENDER SOURCE AND TARGET NAMES
-		sourcePath, err := sthingsBase.RenderTemplateInline(secretFilePaths[0], renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+		sourcePath, err := sthingsBase.RenderTemplateInline(secretFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
 		if err != nil {
 			fmt.Println(err)
 		}
