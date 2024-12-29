@@ -222,10 +222,10 @@ var createCmd = &cobra.Command{
 			allSecretsFromAllSecretsFile := modules.GetAllSecretsFromSopsDecyptedFiles(gitConfig.SecretFiles, allValues)
 			fmt.Println("ALL SECRETS", allSecretsFromAllSecretsFile)
 
-			// Convert map to YAML
+			// CONVERT MAP TO YAML
 			yamlData, err := yaml.Marshal(allSecretsFromAllSecretsFile)
 			if err != nil {
-				fmt.Printf("Error converting to YAML: %v\n", err)
+				fmt.Printf("ERROR CONVERTING TO YAML: %v\n", err)
 				return
 			}
 
@@ -237,6 +237,8 @@ var createCmd = &cobra.Command{
 			encryptedSecret := sthingsCli.EncryptStore(ageKey, string(yamlData))
 			fmt.Println(encryptedSecret)
 
+			// WRITE ENCRYPTED SECRET TO FILE
+			sthingsBase.WriteDataToFile("/tmp/encrypted-secret.yaml", encryptedSecret)
 		}
 
 		//RENDER TEMPLATES W/ ALL VALUES
