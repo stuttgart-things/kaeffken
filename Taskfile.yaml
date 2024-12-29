@@ -14,7 +14,7 @@ vars:
     sh: |
       [ "$(git branch --show-current)" != "main" ] && echo "previewPost-$(git describe --tags --abbrev=0)" || echo $(git describe --tags --abbrev=0)
   GIT_REPO: github.com/stuttgart-things/kaeffken
-  IMAGE_REPO: scr.cd43.sthings-pve.labul.sva.de/kaeffken
+  IMAGE_REPO: ghcr.io/stuttgart-things/kaeffken
   ORGA_NAME: stuttgart-things
   MODULE: github.com/{{ .ORGA_NAME }}/{{ .PROJECT_NAME }}
   DATE:
