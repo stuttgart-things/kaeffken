@@ -13,7 +13,7 @@ prTags:
   - terraform
 
 secretFiles:
-  - "tests/secrets.yaml" # SOURCE SECRET FILE
+  - "tests/secret-config.yaml:{{ .envName }}-{{ .cloud }}-vars.yaml" # SOURCE SECRET FILE
 
 secretAliases:
   - "{{ .envName }}-{{ .cloud }}-server:vsphere_server"    # KEYINSOURCE:TARGETKEY
@@ -22,7 +22,7 @@ secretAliases:
   - "{{ .envName }}-{{ .cloud }}-vmsshuser:vm_ssh_user"
   - "{{ .envName }}-{{ .cloud }}-vmsshpassword:vm_ssh_password"
 
-preQuestions:
+preSurvey:
   - prompt: "VM name?"
     kind: ask
     name: vmName
@@ -35,7 +35,7 @@ preQuestions:
       - "labul"
       - "labda"
   - prompt: "Cloud name"
-    name: envName
+    name: cloud
     options:
       - "vsphere"
       - "proxmox"

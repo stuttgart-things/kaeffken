@@ -42,6 +42,8 @@ type Config struct {
 	PrDescription string   `yaml:"prDescription"`
 	PrTags        []string `yaml:"prTags"`
 	Aliases       []string `yaml:"aliases"`
+	SecretAliases []string `yaml:"secretAliases"`
+	SecretFiles   []string `yaml:"secretFiles"`
 }
 
 func RunGitHubBranchingFlow(config Config, values map[string]interface{}) map[string]interface{} {
@@ -143,6 +145,7 @@ func ConfigToMap(cfg Config) map[string]interface{} {
 		"prDescription": cfg.PrDescription,
 		"prTags":        cfg.PrTags,
 		"aliases":       cfg.Aliases,
+		"secretAliases": cfg.SecretAliases,
 	}
 }
 

@@ -157,6 +157,16 @@ task release
 
 </details>
 
+<details><summary><b>ENV FILE</b></summary>
+
+```bash
+cat <<EOF > .env
+SOPS_AGE_KEY=AGE-SECRET-KEY-1T2...
+EOF
+```
+
+</details>
+
 <details><summary><b>ALL TASKS</b></summary>
 
 ```bash
