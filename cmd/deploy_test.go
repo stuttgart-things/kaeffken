@@ -20,9 +20,9 @@ var (
 
 func TestCloneGitRepository(t *testing.T) {
 
-	gitRepository = "https://github.com/stuttgart-things/kaeffken.git"
+	gitRepository = "https://github.com/stuttgart-things/kaeffken.git" //pragma: allowlist secre
 	gitBranch = "main"
-	gitCommitID = "09de9ff7b5c76aff8bb32f68cfb0bbe49cd5a7a8"
+	gitCommitID = "09de9ff7b5c76aff8bb32f68cfb0bbe49cd5a7a8" // pragma: allowlist secret
 
 	assert := assert.New(t)
 	_, cloned := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
@@ -37,7 +37,7 @@ func TestGetFileListFromGitRepository(t *testing.T) {
 
 	gitRepository = "https://github.com/stuttgart-things/kaeffken.git"
 	gitBranch = "main"
-	gitCommitID = "09de9ff7b5c76aff8bb32f68cfb0bbe49cd5a7a8"
+	gitCommitID = "09de9ff7b5c76aff8bb32f68cfb0bbe49cd5a7a8" // pragma: allowlist secret
 
 	repo, cloned := sthingsCli.CloneGitRepository(gitRepository, gitBranch, gitCommitID, nil)
 
