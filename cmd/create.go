@@ -142,15 +142,20 @@ var createCmd = &cobra.Command{
 			// SPLIT TEMPLATE PATH BY :
 			templateFilePaths := strings.Split(template, ":")
 
+			renderedTemplateFileName, err := sthingsBase.RenderTemplateInline(templateFilePaths[0], renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+			if err != nil {
+				fmt.Println(err)
+			}
+
 			// VERIFY IF TEMPLATE FILE EXISTS
-			templateExists, err := sthingsBase.VerifyIfFileOrDirExists(templateFilePaths[0], "file")
+			templateExists, err := sthingsBase.VerifyIfFileOrDirExists(string(renderedTemplateFileName), "file")
 			if err != nil {
 				log.Fatalf("ERROR VERIFYING TEMPLATE FILE: %v", err)
 			}
 
 			if templateExists {
-				log.Info("LOCAL TEMPLATE FOUND : ", templateFilePaths[0])
-				templateFile := sthingsBase.ReadFileToVariable(templateFilePaths[0])
+				log.Info("LOCAL TEMPLATE FOUND : ", string(renderedTemplateFileName))
+				templateFile := sthingsBase.ReadFileToVariable(string(renderedTemplateFileName))
 
 				renderedOutputFileName, err := sthingsBase.RenderTemplateInline(templateFilePaths[1], renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
 				if err != nil {
