@@ -25,6 +25,11 @@ vars:
 dotenv: ['.env', '{{.HOME}}/.env']
 
 tasks:
+  check:
+    desc: "Run pre-commit hooks"
+    cmds:
+      - pre-commit run -a
+
   build-ko:
     desc: Build image w/ KO
     deps: [lint, test, commit]
