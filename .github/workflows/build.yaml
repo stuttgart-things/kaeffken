@@ -22,7 +22,7 @@ jobs:
       golang-version: "1.23.1"
       accept-linterrors: true
       accept-failedtests: false
-    secrets: inherit
+    secrets: inherit  #pragma: allowlist secret
 
   # build-image:
   #   name: Build Image

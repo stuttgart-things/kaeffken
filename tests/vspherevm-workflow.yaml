@@ -21,7 +21,7 @@ secretAliases:
   - "{{ .envName }}-{{ .cloud }}-password:vsphere_password"
   - "{{ .envName }}-{{ .cloud }}-vmsshuser:vm_ssh_user"
   - "{{ .envName }}-{{ .cloud }}-vmsshpassword:vm_ssh_password"
-secretFileOutputName: "secret-vars.yaml" # SOURCE SECRET FILE
+secretFileOutputName: "secret-vars.yaml" # SOURCE SECRET FILE  #pragma: allowlist secret
 
 preQuestions:
   - prompt: "VM name?"

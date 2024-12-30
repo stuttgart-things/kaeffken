@@ -108,7 +108,7 @@ func RenderFluxApplication(defaultsPath, appDefaultsPath, appsPath string) (rend
 
 			// SET SUBSTITUTION SECRETS
 			defaultSecrets := fluxDefaults.FluxAppDefaults[appkey].Secrets
-			appSecrets := appValues.Secrets // pragma: allowlist secre
+			appSecrets := appValues.Secrets //pragma: allowlist secret
 
 			// MERGE DEFAULT VARIABLES + VALUES
 			secrets := sthingsBase.MergeMaps(defaultSecrets, appSecrets)
@@ -118,8 +118,8 @@ func RenderFluxApplication(defaultsPath, appDefaultsPath, appsPath string) (rend
 			substituteSecrets := make(map[string]interface{})
 
 			// SET NAME + KIND TO SECRET
-			for _, secret := range secrets {
-				substituteSecrets[secret.Name] = "Secret"
+			for _, secret := range secrets { //pragma: allowlist secret
+				substituteSecrets[secret.Name] = "Secret" //pragma: allowlist secret
 			}
 
 			kustomization := models.Kustomization{
@@ -154,13 +154,13 @@ func RenderFluxApplication(defaultsPath, appDefaultsPath, appsPath string) (rend
 				secretVariables := make(map[string]interface{})
 
 				fmt.Println("MERGED SECRETS: ", secrets)
-				for key, secret := range secrets {
+				for key, secret := range secrets { //pragma: allowlist secret
 					secretVariables["metaName"] = key
 					secretVariables["metaNamespace"] = appDefaults.FluxKustomization.CR.Namespace
 
 					keyValues := make(map[string]interface{})
 
-					for _, secretValue := range secret.Data {
+					for _, secretValue := range secret.Data { //pragma: allowlist secret
 						fmt.Println("SECRET: ", secretValue)
 						parts := strings.Split(secretValue, ":")
 						if len(parts) != 2 {
