@@ -45,7 +45,7 @@ func TestLoadDataFromRepository(t *testing.T) {
 	repoworks := make(map[string]string)
 	repoworks["repository"] = "https://github.com/stuttgart-things/kaeffken.git"
 	repoworks["branch"] = "main"
-	repoworks["gitCommitID"] = "2f2ada234ffee467195439dacfe4a5579be3f66a"
+	repoworks["gitCommitID"] = "2f2ada234ffee467195439dacfe4a5579be3f66a" //pragma: allowlist secret
 
 	repository, cloned := CloneGitRepository(repoworks)
 

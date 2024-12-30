@@ -83,7 +83,7 @@ func GetAllSecretsFromSopsDecyptedFiles(secretFiles []string, allValues map[stri
 	allSecretsFromAllSecretsFile = make(map[string]interface{})
 
 	// GET ALL SECRETS TO A VALUES MAP
-	for _, secretFile := range secretFiles {
+	for _, secretFile := range secretFiles { //pragma: allowlist secret
 
 		// RENDER SOURCE AND TARGET NAMES
 		sourcePath, err := sthingsBase.RenderTemplateInline(secretFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
