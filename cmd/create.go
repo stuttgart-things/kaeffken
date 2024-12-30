@@ -288,29 +288,34 @@ var createCmd = &cobra.Command{
 			fmt.Println(string(yamlData))
 
 			// READ AGE KEY FROM ENV
-			ageKey := os.Getenv("AGE")
-			encryptedSecret := sthingsCli.EncryptStore(ageKey, string(yamlData))
-			fmt.Println(encryptedSecret)
+			// CHECH IF AGE KEY IS SET IN ENV
+			if os.Getenv("AGE") == "" {
+				log.Error("ERROR: AGE KEY ENVIRONMENT VARIABLE IS NOT SET - SKIPPED CREATING SECRET")
+			} else {
+				ageKey := os.Getenv("AGE")
+				encryptedSecret := sthingsCli.EncryptStore(ageKey, string(yamlData))
+				fmt.Println(encryptedSecret)
 
-			// RENDER OUTPUT FILE PATH
-			secretOutputName, err := sthingsBase.RenderTemplateInline(gitConfig.SecretFileOutputName, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
-			if err != nil {
-				log.Error("ERROR RENDERING QUESTION FILE: ", err)
+				// RENDER OUTPUT FILE PATH
+				secretOutputName, err := sthingsBase.RenderTemplateInline(gitConfig.SecretFileOutputName, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+				if err != nil {
+					log.Error("ERROR RENDERING QUESTION FILE: ", err)
+				}
+
+				// WRITE ENCRYPTED SECRET TO FILE
+				// RENDER SUBFOLDER
+				renderedSubFolder, err := sthingsBase.RenderTemplateInline(gitConfig.SubFolder, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+				if err != nil {
+					fmt.Println(err)
+				}
+
+				secretOutputPath := outputDir + "/" + string(secretOutputName)
+				outputFilePathGit := gitConfig.RootFolder + "/" + string(renderedSubFolder) + "/" + string(secretOutputName)
+
+				sthingsBase.WriteDataToFile(secretOutputPath, encryptedSecret)
+				log.Info("SECRET OUTPUT: ", secretOutputPath)
+				files2Commit = append(files2Commit, secretOutputPath+":"+outputFilePathGit)
 			}
-
-			// WRITE ENCRYPTED SECRET TO FILE
-			// RENDER SUBFOLDER
-			renderedSubFolder, err := sthingsBase.RenderTemplateInline(gitConfig.SubFolder, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
-			if err != nil {
-				fmt.Println(err)
-			}
-
-			secretOutputPath := outputDir + "/" + string(secretOutputName)
-			outputFilePathGit := gitConfig.RootFolder + "/" + string(renderedSubFolder) + "/" + string(secretOutputName)
-
-			sthingsBase.WriteDataToFile(secretOutputPath, encryptedSecret)
-			log.Info("SECRET OUTPUT: ", secretOutputPath)
-			files2Commit = append(files2Commit, secretOutputPath+":"+outputFilePathGit)
 
 		}
 
