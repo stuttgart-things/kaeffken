@@ -108,7 +108,7 @@ func RenderFluxApplication(defaultsPath, appDefaultsPath, appsPath string) (rend
 
 			// SET SUBSTITUTION SECRETS
 			defaultSecrets := fluxDefaults.FluxAppDefaults[appkey].Secrets
-			appSecrets := appValues.Secrets
+			appSecrets := appValues.Secrets // pragma: allowlist secre
 
 			// MERGE DEFAULT VARIABLES + VALUES
 			secrets := sthingsBase.MergeMaps(defaultSecrets, appSecrets)
@@ -179,7 +179,7 @@ func RenderFluxApplication(defaultsPath, appDefaultsPath, appsPath string) (rend
 
 				// ENCRYPT SECRET WITH SOPS
 				encryptedSecret := sthingsCli.EncryptStore(sopsAgeKey, string(renderedSecret))
-				renderedTemplates[appkey+"-secret"] = encryptedSecret
+				renderedTemplates[appkey+"-secret"] = encryptedSecret // pragma: allowlist secret
 
 			}
 
