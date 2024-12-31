@@ -1,3 +1,10 @@
+## [0.2.15](https://github.com/stuttgart-things/kaeffken/compare/v0.2.14...v0.2.15) (2024-12-31)
+
+
+### Bug Fixes
+
+* updated create cmd ([5af9f39](https://github.com/stuttgart-things/kaeffken/commit/5af9f3936059fbddce4b63aa1692292fc2712519))
+
 ## [0.2.14](https://github.com/stuttgart-things/kaeffken/compare/v0.2.13...v0.2.14) (2024-12-31)
 
 
