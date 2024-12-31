@@ -6,6 +6,14 @@
 * **deps:** update module github.com/google/go-github/v62 to v68 ([716d780](https://github.com/stuttgart-things/kaeffken/commit/716d780a87d298766c73f094987bf63cb346d3cd))
 * **deps:** update module gopkg.in/yaml.v2 to v3 ([6f0936e](https://github.com/stuttgart-things/kaeffken/commit/6f0936e6ec836726ecb8cb770a126cb4fb70d569))
 
+## [0.2.14](https://github.com/stuttgart-things/kaeffken/compare/v0.2.13...v0.2.14) (2024-12-31)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/google/go-github/v62 to v68 ([716d780](https://github.com/stuttgart-things/kaeffken/commit/716d780a87d298766c73f094987bf63cb346d3cd))
+* **deps:** update module gopkg.in/yaml.v2 to v3 ([6f0936e](https://github.com/stuttgart-things/kaeffken/commit/6f0936e6ec836726ecb8cb770a126cb4fb70d569))
+
 ## [0.2.13](https://github.com/stuttgart-things/kaeffken/compare/v0.2.12...v0.2.13) (2024-12-26)
 
 
