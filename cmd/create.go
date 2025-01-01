@@ -40,6 +40,7 @@ var (
 	files2Commit    []string
 	homerunToken    = os.Getenv("HOMERUN_TOKEN")
 	githubPRAnswers = make(map[string]interface{})
+	secretsToOutput = make(map[string]interface{})
 	bracketFormat   = "curly"
 	allValues       = make(map[string]interface{})
 	renderOption    = "missingkey=error"
@@ -277,15 +278,45 @@ var createCmd = &cobra.Command{
 			allSecretsFromAllSecretsFile := modules.GetAllSecretsFromSopsDecyptedFiles(gitConfig.SecretFiles, allValues)
 			fmt.Println("ALL SECRETS", allSecretsFromAllSecretsFile)
 
+			// ADD ONLY TO BE CREATED SECRETS TO
+
+			// LOOP OVER SECRET ALIASES
+			for i, secretAlias := range gitConfig.SecretAliases {
+
+				secretOutputName, err := sthingsBase.RenderTemplateInline(secretAlias, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+				if err != nil {
+					log.Error("ERROR RENDERING QUESTION FILE: ", err)
+				}
+
+				// SPLIT SECRET ALIAS BY :
+				secretOutputNameSplit := strings.Split(string(secretOutputName), ":")
+				sourceKey := secretOutputNameSplit[0]
+				targetKey := secretOutputNameSplit[1]
+
+				fmt.Println(i, sourceKey)
+				fmt.Println(i, targetKey)
+
+				// CHECK IF SECRET ALIAS IS IN ALL SECRETS
+				if _, ok := allSecretsFromAllSecretsFile[sourceKey]; ok {
+					log.Info("SECRET ALIAS FOUND: ", sourceKey)
+					secretsToOutput[targetKey] = allSecretsFromAllSecretsFile[sourceKey]
+
+				} else {
+					log.Warn("SECRET ALIAS NOT FOUND: ", sourceKey)
+				}
+			}
+
+			log.Info("SECRETS TO OUTPUT: ", secretsToOutput)
+
 			// CONVERT MAP TO YAML
-			yamlData, err := yaml.Marshal(allSecretsFromAllSecretsFile)
+			encryptedSecrets, err := yaml.Marshal(secretsToOutput)
 			if err != nil {
 				fmt.Printf("ERROR CONVERTING TO YAML: %v\n", err)
 				return
 			}
 
-			// Print the YAML
-			fmt.Println(string(yamlData))
+			// PRINT THE YAML
+			fmt.Println(string(encryptedSecrets))
 
 			// READ AGE KEY FROM ENV
 			// CHECH IF AGE KEY IS SET IN ENV
@@ -293,7 +324,7 @@ var createCmd = &cobra.Command{
 				log.Error("ERROR: AGE KEY ENVIRONMENT VARIABLE IS NOT SET - SKIPPED CREATING SECRET")
 			} else {
 				ageKey := os.Getenv("AGE")
-				encryptedSecret := sthingsCli.EncryptStore(ageKey, string(yamlData))
+				encryptedSecret := sthingsCli.EncryptStore(ageKey, string(encryptedSecrets))
 				fmt.Println(encryptedSecret)
 
 				// RENDER OUTPUT FILE PATH
@@ -302,13 +333,13 @@ var createCmd = &cobra.Command{
 					log.Error("ERROR RENDERING QUESTION FILE: ", err)
 				}
 
-				// WRITE ENCRYPTED SECRET TO FILE
 				// RENDER SUBFOLDER
 				renderedSubFolder, err := sthingsBase.RenderTemplateInline(gitConfig.SubFolder, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
 				if err != nil {
 					fmt.Println(err)
 				}
 
+				// WRITE ENCRYPTED SECRET TO FILE
 				secretOutputPath := outputDir + "/" + string(secretOutputName)
 				outputFilePathGit := gitConfig.RootFolder + "/" + string(renderedSubFolder) + "/" + string(secretOutputName)
 
@@ -371,9 +402,9 @@ var createCmd = &cobra.Command{
 		if homerunToken != "" {
 
 			message := homerun.Message{
-				Title:           "kaeffken",
-				Message:         "Memory usage is high",
-				Severity:        "INFO",
+				Title:           "[PULL-REQUEST][BRANCH]-created w/ kaeffken",
+				Message:         "Repository: " + githubPRAnswers["gitRepo"].(string) + " Branch: " + githubPRAnswers["gitBranch"].(string),
+				Severity:        "SUCCESS",
 				Author:          author,
 				Timestamp:       time.Now().UTC().Format(time.RFC3339), // Generate current timestamp
 				System:          "terraform",

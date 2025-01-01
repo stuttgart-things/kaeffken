@@ -15,12 +15,14 @@ prTags:
 #SECRETS
 secretFiles:
   - "tests/secret-config.yaml"
+
 secretAliases:
-  - "{{ .envName }}-{{ .cloud }}-server:vsphere_server"    # KEYINSOURCE:TARGETKEY
-  - "{{ .envName }}-{{ .cloud }}-user:vsphere_user"
-  - "{{ .envName }}-{{ .cloud }}-password:vsphere_password"
-  - "{{ .envName }}-{{ .cloud }}-vmsshuser:vm_ssh_user"
-  - "{{ .envName }}-{{ .cloud }}-vmsshpassword:vm_ssh_password"
+  - "host:vsphere_host"    # KEYINSOURCE:TARGETKEY
+  # - "{{ .envName }}-{{ .cloud }}-server:vsphere_server"    # KEYINSOURCE:TARGETKEY
+  # - "{{ .envName }}-{{ .cloud }}-user:vsphere_user"
+  # - "{{ .envName }}-{{ .cloud }}-password:vsphere_password"
+  # - "{{ .envName }}-{{ .cloud }}-vmsshuser:vm_ssh_user"
+  # - "{{ .envName }}-{{ .cloud }}-vmsshpassword:vm_ssh_password"
 secretFileOutputName: "secret-vars.yaml" # SOURCE SECRET FILE  #pragma: allowlist secret
 
 preQuestions:
@@ -49,5 +51,4 @@ questions:
   - tests/{{ .envName }}.yaml
 
 templates:
-  - "/home/sthings/projects/stuttgart-things/terraform/vsphere-vm.tf.tpl:{{ .vmName }}.tf"
-  - "tests/state.tf.tpl:state/state.tf"
+  - "/home/sthings/projects/stuttgart-things/terraform/templates/vsphere-vm.tf.tpl:{{ .vmName }}.tf"
