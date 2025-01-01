@@ -22,9 +22,27 @@ func CreateSecretsMap(yamlData []byte, wantedSecrets map[string]interface{}) (se
 	}
 
 	// CREATE THE SECRETS MAP
-	for _, value := range data {
+	for i, value := range data {
 
 		switch v := value.(type) {
+		case int:
+			if wantedSecrets == nil {
+				secrets[i] = value
+			}
+
+			if _, ok := wantedSecrets[i]; ok {
+				secrets[wantedSecrets[i].(string)] = v
+			}
+
+		case string:
+			if wantedSecrets == nil {
+				secrets[i] = value
+			}
+
+			if _, ok := wantedSecrets[i]; ok {
+				secrets[wantedSecrets[i].(string)] = v
+			}
+
 		case map[string]interface{}:
 			for k, v := range v {
 
@@ -36,11 +54,8 @@ func CreateSecretsMap(yamlData []byte, wantedSecrets map[string]interface{}) (se
 				if _, ok := wantedSecrets[k]; ok {
 					secrets[wantedSecrets[k].(string)] = v
 				}
-
-				// fmt.Println(k, v)
 			}
 		}
-
 	}
 
 	return
