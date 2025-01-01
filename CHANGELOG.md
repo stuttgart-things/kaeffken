@@ -1,3 +1,12 @@
+## [0.2.16](https://github.com/stuttgart-things/kaeffken/compare/v0.2.15...v0.2.16) (2025-01-01)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/stuttgart-things/sthingscli to v0.1.125 ([cbde538](https://github.com/stuttgart-things/kaeffken/commit/cbde53877d3634d42957a2ab6ba694c8d8febc27))
+* **deps:** update module gopkg.in/yaml.v2 to v3 ([c01ccfd](https://github.com/stuttgart-things/kaeffken/commit/c01ccfd30d617ba2da0f22ac8360f356d9d1634c))
+* updated sops secret rendering ([cdfe1b5](https://github.com/stuttgart-things/kaeffken/commit/cdfe1b50044d5e34decd6070bea214a17e0030d0))
+
 ## [0.2.15](https://github.com/stuttgart-things/kaeffken/compare/v0.2.14...v0.2.15) (2024-12-31)
 
 
