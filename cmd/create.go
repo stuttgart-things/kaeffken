@@ -402,13 +402,13 @@ var createCmd = &cobra.Command{
 		if homerunToken != "" {
 
 			message := homerun.Message{
-				Title:           "[PULL-REQUEST][BRANCH]-created w/ kaeffken",
-				Message:         "Repository: " + githubPRAnswers["gitRepo"].(string) + " Branch: " + githubPRAnswers["gitBranch"].(string),
+				Title:           "[PULL-REQUEST] [" + githubPRAnswers["prTitle"].(string) + "] created w/ KAEFFKEN",
+				Message:         "REPOSITORY: " + githubPRAnswers["gitOwner"].(string) + "/" + githubPRAnswers["gitRepo"].(string) + " BRANCH: " + githubPRAnswers["gitBranch"].(string),
 				Severity:        "SUCCESS",
 				Author:          author,
 				Timestamp:       time.Now().UTC().Format(time.RFC3339), // Generate current timestamp
-				System:          "terraform",
-				Tags:            "terraform,kaeffken",
+				System:          "kaeffken",
+				Tags:            strings.Join(gitConfig.PrTags, ",") + ",kaeffken",
 				AssigneeAddress: authorMail,
 				AssigneeName:    author,
 				Artifacts:       "Admin",
