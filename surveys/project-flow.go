@@ -37,6 +37,7 @@ type Config struct {
 	SubFolder            string   `yaml:"subFolder"`
 	Questions            []string `yaml:"questions"`
 	Templates            []string `yaml:"templates"`
+	Values               []string `yaml:"values"`
 	Technology           string   `yaml:"technology"`
 	PrTitle              string   `yaml:"prTitle"`
 	PrDescription        string   `yaml:"prDescription"`

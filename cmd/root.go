@@ -38,7 +38,7 @@ func Execute(defCmd string) {
 	var cmdFound bool
 	cmd := rootCmd.Commands()
 
-	PrintBanner()
+	//PrintBanner()
 
 	for _, a := range cmd {
 		for _, b := range os.Args[1:] {
