@@ -10,15 +10,67 @@
   </p>
 </div>
 
-## COMMANDS
+## CREATE
 
 <details><summary><b>CREATE</b></summary>
 
 ```bash
-kaeffken create --survey=true --questions "tests/questions1.yaml,tests/questions2.yaml"
+kaeffken create --profile tests/vspherevm-workflow.yaml --survey true
 ```
 
 </details>
+
+<details><summary><b>WORFKLOW SCHEMA</b></summary>
+
+```bash
+---
+gitRepo: stuttgart-things
+gitOwner: stuttgart-things
+gitBranch: "{{ .technology }}-{{ .vmName }}"
+rootFolder: terraform
+subFolder: "{{ .vmName }}"
+technology: terraform
+commitMessage: "Add {{ .vmName }} VM"
+
+prTitle: "Add {{ .vmName }} VM"
+prDescription: "Add {{ .vmName }} VM"
+prTags:
+  - terraform
+
+values:
+  - "tests/values.yaml"
+
+#SECRETS
+secretFiles:
+  - "tests/secret-config.yaml"
+
+secretAliases:
+  - "host:vsphere_host"    # KEYINSOURCE:TARGETKEY
+
+secretFileOutputName: "secret-vars.yaml" # SOURCE SECRET FILE  #pragma: allowlist secret
+
+preQuestions:
+  - prompt: "VM name?"
+    kind: ask
+    name: vmName
+    type: string
+    minLength: 3
+    maxLength: 20
+
+# SHOULD BE IMPLEMENTED | BEFORE RENDERING - SET/PRE-RENDER THOSE ALIASES
+aliases:
+  - "stateKey:{{ .vmName }}"
+
+questions:
+  - tests/vm-general.yaml
+  - tests/{{ .envName }}.yaml
+
+templates:
+  - "tests/vsphere-vm.tf.tpl:{{ .vmName }}.tf"
+
+</details>
+
+
 
 <details><summary><b>DECRYPT</b></summary>
 
