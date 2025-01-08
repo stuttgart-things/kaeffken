@@ -402,8 +402,8 @@ var createCmd = &cobra.Command{
 		if homerunToken != "" {
 
 			message := homerun.Message{
-				Title:           "[PULL-REQUEST] [" + githubPRAnswers["prTitle"].(string) + "] created w/ KAEFFKEN",
-				Message:         "REPOSITORY: " + githubPRAnswers["gitOwner"].(string) + "/" + githubPRAnswers["gitRepo"].(string) + " BRANCH: " + githubPRAnswers["gitBranch"].(string),
+				Title:           "[PR][KAEFFKEN] - " + githubPRAnswers["prTitle"].(string) + "] created",
+				Message:         "REPOSITORY: https://github.com/" + githubPRAnswers["gitOwner"].(string) + "/" + githubPRAnswers["gitRepo"].(string) + " BRANCH: " + githubPRAnswers["gitBranch"].(string),
 				Severity:        "SUCCESS",
 				Author:          author,
 				Timestamp:       time.Now().UTC().Format(time.RFC3339), // Generate current timestamp
