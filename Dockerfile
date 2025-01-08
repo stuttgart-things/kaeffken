@@ -9,7 +9,7 @@ COPY . .
 RUN go mod tidy
 RUN go build -o /bin/kaeffken
 
-FROM alpine:3.21.0
+FROM alpine:3.21.2
 
 COPY --from=builder /bin/kaeffken /usr/bin/kaeffken
 
