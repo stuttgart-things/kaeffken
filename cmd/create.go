@@ -86,6 +86,7 @@ var createCmd = &cobra.Command{
 		log.Info("ALIASES: ", gitConfig.Aliases)
 		log.Info("SECRET-ALIASES: ", gitConfig.SecretAliases)
 		log.Info("SECRET-FILES: ", gitConfig.SecretFiles)
+		log.Info("VALUE-FILES: ", gitConfig.Values)
 
 		// LOAD AND ASK PRE-QUESTIONS
 		preQuestions, _ := modules.LoadQuestionFile(profile)
@@ -114,6 +115,48 @@ var createCmd = &cobra.Command{
 			for _, question := range preQuestions {
 				allValues[question.Name] = question.Default
 			}
+		}
+
+		// READ VALUES (IF DEFINED)
+		if len(gitConfig.Values) > 0 {
+
+			// LOOP OVER VALUES
+			for _, valueFile := range gitConfig.Values {
+
+				// RENDER VALUE FILE
+				renderedValueFilePath, err := sthingsBase.RenderTemplateInline(valueFile, renderOption, brackets[bracketFormat].begin, brackets[bracketFormat].end, allValues)
+				if err != nil {
+					log.Error("ERROR RENDERING VALUE FILE: ", err)
+				}
+
+				// VERIFY IF VALUE FILE EXISTS
+				valueFileExists, err := sthingsBase.VerifyIfFileOrDirExists(string(renderedValueFilePath), "file")
+				if err != nil {
+					log.Fatalf("ERROR VERIFYING VALUE FILE: %v", err)
+				}
+
+				if valueFileExists {
+					log.Info("VALUE FILE FOUND: ", string(renderedValueFilePath))
+					valueFileContent := sthingsBase.ReadFileToVariable(string(renderedValueFilePath))
+
+					// UNMARSHAL YAML
+					valueFileValues := make(map[string]interface{})
+					err = yaml.Unmarshal([]byte(valueFileContent), &valueFileValues)
+					if err != nil {
+						log.Error("ERROR UNMARSHALING YAML: ", err)
+					}
+
+					// MERGE VALUE FILE VALUES TO ALL VALUES
+					allValues = sthingsBase.MergeMaps(valueFileValues, allValues)
+
+				} else {
+					log.Error("VALUE FILE NOT FOUND: ", string(renderedValueFilePath))
+					os.Exit(3)
+				}
+
+			}
+
+			fmt.Println("VALUES: ", gitConfig.Values)
 		}
 
 		// LOAD ALL QUESTION FILES

@@ -12,6 +12,9 @@ prDescription: "Add {{ .vmName }} VM"
 prTags:
   - terraform
 
+values:
+  - "tests/values.yaml"
+
 #SECRETS
 secretFiles:
   - "tests/secret-config.yaml"
@@ -51,4 +54,4 @@ questions:
   - tests/{{ .envName }}.yaml
 
 templates:
-  - "/home/sthings/projects/stuttgart-things/terraform/templates/vsphere-vm.tf.tpl:{{ .vmName }}.tf"
+  - "tests/vsphere-vm.tf.tpl:{{ .vmName }}.tf"
