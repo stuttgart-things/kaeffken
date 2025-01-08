@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/stuttgart-things/kaeffken/compare/v0.2.16...v0.3.0) (2025-01-08)
+
+
+### Features
+
+* added value file rendering ([c2ed3f7](https://github.com/stuttgart-things/kaeffken/commit/c2ed3f79fa485436fa48f0d61fca8fb42e6a1949))
+
 ## [0.2.16](https://github.com/stuttgart-things/kaeffken/compare/v0.2.15...v0.2.16) (2025-01-01)
 
 
