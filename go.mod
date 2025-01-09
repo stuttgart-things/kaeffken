@@ -10,7 +10,7 @@ require (
 	github.com/google/go-github/v62 v62.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
-	github.com/stuttgart-things/homerun-library v0.0.0-20241203091353-87840452d0ba
+	github.com/stuttgart-things/homerun-library v1.0.0
 	github.com/stuttgart-things/sthingsBase v0.1.41
 	github.com/stuttgart-things/sthingsCli v0.1.125
 	go.hein.dev/go-version v0.1.0
