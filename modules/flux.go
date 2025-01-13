@@ -11,7 +11,7 @@ import (
 	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
-	"github.com/google/go-github/v62/github"
+	"github.com/google/go-github/v68/github"
 	"github.com/stuttgart-things/kaeffken/models"
 )
 

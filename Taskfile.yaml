@@ -149,7 +149,7 @@ tasks:
   release:
     desc: Release
     cmds:
-      - git checkout main && git pull
+      - task: pr
       - task: commit
       - npx semantic-release --dry-run
       - npx semantic-release --debug --no-ci
