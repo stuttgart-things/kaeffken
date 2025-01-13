@@ -9,7 +9,7 @@ import (
 
 	sthingsCli "github.com/stuttgart-things/sthingsCli"
 
-	"github.com/google/go-github/v62/github"
+	"github.com/google/go-github/v68/github"
 )
 
 func CreateGithubClient(token string) *github.Client {
