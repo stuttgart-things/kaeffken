@@ -1,3 +1,15 @@
+## [0.3.2](https://github.com/stuttgart-things/kaeffken/compare/v0.3.1...v0.3.2) (2025-01-13)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/go-git/go-billy/v5 to v5.6.2 ([9f04664](https://github.com/stuttgart-things/kaeffken/commit/9f04664b49eff81e9770a1d6eb2624d941a6ed58))
+* **deps:** update module github.com/stuttgart-things/homerun-library to v1 ([5336fc6](https://github.com/stuttgart-things/kaeffken/commit/5336fc63431b0b8fb6bf801e07f1b6862cf61a28))
+* update gogit deps ([d69a9c5](https://github.com/stuttgart-things/kaeffken/commit/d69a9c5a708880eb0b75e9ee54677c158ffe31b5))
+* updated deps ([e75d037](https://github.com/stuttgart-things/kaeffken/commit/e75d037b54b417ba675c4d1570b70ececabc85f6))
+* updated go-github deps ([9b47574](https://github.com/stuttgart-things/kaeffken/commit/9b4757417d9b050b512037f26b40f584d9c361c5))
+* updated task ([b93aa72](https://github.com/stuttgart-things/kaeffken/commit/b93aa724632b44e8953f75f5cc9aa7c500168bf9))
+
 ## [0.3.1](https://github.com/stuttgart-things/kaeffken/compare/v0.3.0...v0.3.1) (2025-01-08)
 
 
