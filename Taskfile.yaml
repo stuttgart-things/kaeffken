@@ -149,8 +149,10 @@ tasks:
   release:
     desc: Release
     cmds:
-      - task: pr
       - task: commit
+      - sleep 20s
+      - gh run watch --exit-status
+      - task: pr
       - npx semantic-release --dry-run
       - npx semantic-release --debug --no-ci
       - task: goreleaser
