@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/stuttgart-things/kaeffken/compare/v0.3.2...v0.3.3) (2025-01-15)
+
+
+### Bug Fixes
+
+* feature/update-release-task ([b4edcfd](https://github.com/stuttgart-things/kaeffken/commit/b4edcfdf6edc694fba7073ea751bd79a16ca8e4d))
+
 ## [0.3.2](https://github.com/stuttgart-things/kaeffken/compare/v0.3.1...v0.3.2) (2025-01-13)
 
 
