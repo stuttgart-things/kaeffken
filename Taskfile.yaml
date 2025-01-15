@@ -41,7 +41,7 @@ tasks:
 
   build-ko:
     desc: Build image w/ KO
-    deps: [lint, test, commit]
+    deps: [lint, test]
     env:
       KO_DOCKER_REPO: ghcr.io/{{ .ORGA_NAME }}/{{ .PROJECT_NAME }}
     cmds:
@@ -143,17 +143,6 @@ tasks:
         read BRANCH_NAME;
         git branch -d ${BRANCH_NAME}
         git push origin -d ${BRANCH_NAME}
-
-  build-ko:
-    desc: Build KO Image
-    deps: [commit]
-    cmds:
-      - |
-        BUILD_IMAGE=$(ko build --preserve-import-paths --image-label org.opencontainers.image.source={{ .GIT_REPO }})
-        echo "Built image: ${BUILD_IMAGE}"
-    env:
-      KO_DOCKER_REPO: "{{ .IMAGE_REPO }}"
-      KO_REPO: "{{ .GIT_REPO }}"
 
   release:
     desc: Release
