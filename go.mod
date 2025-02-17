@@ -8,7 +8,7 @@ require (
 	github.com/getsops/sops/v3 v3.9.3
 	github.com/go-git/go-billy/v5 v5.6.2
 	github.com/google/go-github/v68 v68.0.0
-	github.com/spf13/cobra v1.8.1
+	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	github.com/stuttgart-things/homerun-library v1.0.0
 	github.com/stuttgart-things/sthingsBase v0.1.41
@@ -190,7 +190,7 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/spf13/viper v1.19.0 // indirect
 	github.com/stuttgart-things/redisqueue v0.0.0-20230628084515-1d31f7874df7 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
