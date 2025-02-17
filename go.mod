@@ -8,6 +8,7 @@ require (
 	github.com/getsops/sops/v3 v3.9.3
 	github.com/go-git/go-billy/v5 v5.6.2
 	github.com/google/go-github/v68 v68.0.0
+	github.com/google/go-github/v69 v69.2.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	github.com/stuttgart-things/homerun-library v1.0.0
